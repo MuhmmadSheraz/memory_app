@@ -1,7 +1,15 @@
-import http from "http";
- const PORT=3001
-
-const app=http.createServer((req,res)=>{
-    res.end("Hello From Node And Typescript")
+import express, { Application } from "express";
+import dotenv from "dotenv"
+import process from "process";
+const app:Application=express()
+dotenv.config({
+    path:"./config.env"
 })
-app.listen(3001)
+// Express Middlewares
+app.use(express.json)
+
+const port:string=process.env.PORT||"3001"
+app.listen(port,()=>{
+    console.log(`server is started 💨 on port ${port} `)
+})
+
