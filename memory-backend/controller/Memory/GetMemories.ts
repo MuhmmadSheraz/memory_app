@@ -22,13 +22,18 @@ export const getAllMemories = async (req: Request, res: Response,) => {
         // data=await memories.find().where("title").equals("Good Memory")
 
 // ************** Exculde Query
-            const queryObj={...req.query} //Shallow copy of req.query
+            // const queryObj={...req.query} //Shallow copy of req.query
+            // const excludeFields=["sort","page","limit"] //  these are the query fields which I don't want to add in request
+            // excludeFields.forEach((exQ:string)=>delete queryObj[exQ])
+            // console.log(queryObj)
+            // data=await memories.find(queryObj)
 
-            const excludeFields=["sort","page","limit"] //  these are the query fields which I don't want to add in request
-            excludeFields.forEach((exQ:string)=>delete queryObj[exQ])
-            console.log(queryObj)
-            data=await memories.find(queryObj)
-
+// ************** Advance Filter (Greater than or Less than)
+// Find Memory having morethan 5 likes
+let queryObj=JSON.stringify({...req.query})
+queryObj=queryObj.replace(/\b(gte|gt)\b/g ,match=> `$${match}`) //gte=greaterthanequalto || gt=greaterthan
+console.log(queryObj)
+data=await memories.find(JSON.parse(queryObj))
         res.send({
             status: 'success',
             length: data?.length,
@@ -40,5 +45,6 @@ export const getAllMemories = async (req: Request, res: Response,) => {
             message: error?.message
         })
     }
+
 
 }
