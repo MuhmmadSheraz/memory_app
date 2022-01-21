@@ -1,4 +1,4 @@
-import { memories } from './../../../model/memory';
+import { memories } from './../../model/memory';
 import { Response,Request } from 'express';
 export const createMemory = async(req:Request,res:Response)=>{
 const {body}:any=req

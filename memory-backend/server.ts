@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import dotenv from "dotenv"
 import process from "process";
 import memoryRoutes from "./routes/Memory"
-import { connectDB } from "../helper/dbConnection";
+import { connectDB } from "./helper/dbConnection";
 const app:Application=express()
 dotenv.config({
     path:"./config.env"
