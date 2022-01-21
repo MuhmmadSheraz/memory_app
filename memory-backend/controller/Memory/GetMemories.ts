@@ -1,7 +1,7 @@
 import { memories } from './../../model/memory';
 import e, { Request, Response } from 'express';
 export const getAllMemories = async (req: Request, res: Response) => {
-  let data;
+  let data:any;
   try {
     // finds all the docs.
     //  data=await memories.find()
@@ -36,13 +36,25 @@ export const getAllMemories = async (req: Request, res: Response) => {
     // data=await memories.find(JSON.parse(queryObj))
 
     // ************** Sort By Date
-    if (req.query.sort) {
-      data = await memories.find().sort(req.query.sort);
-    } else {
-      data = await memories.find();
+    // if (req.query.sort) {
+    //   data = await memories.find().sort(req.query.sort);
+    // } else {
+    //   data = await memories.find();
+    // }
+
+    // ******* Send Limited Fields||Data
+    if(req.query.fields){
+        const fields:string=JSON.stringify(req?.query?.fields)
+        const requiredFields=fields.split(",").join(" ")
+        // data=await memories.find().select(JSON.parse(requiredFields))
+        data=await memories.find().select("-createdAt") // - sign for explicitly exclude fields here the all fields will return except createdAt
+        
+    }
+    else{
+        data = await memories.find();
     }
     res.send({
-      status: 'success',
+        status: 'success',
       length: data?.length,
       data,
     });
