@@ -1,10 +1,11 @@
+import { validPagination } from './../../helper/validPagination';
 import { memories } from './../../model/memory';
 import e, { Request, Response } from 'express';
 export const getAllMemories = async (req: Request, res: Response) => {
-  let data:any;
+  let data: any;
   try {
     // finds all the docs.
-    //  data=await memories.find()
+     data=await memories.find()
 
     // Filter Methods
 
@@ -43,18 +44,31 @@ export const getAllMemories = async (req: Request, res: Response) => {
     // }
 
     // ******* Send Limited Fields||Data
-    if(req.query.fields){
-        const fields:string=JSON.stringify(req?.query?.fields)
-        const requiredFields=fields.split(",").join(" ")
-        // data=await memories.find().select(JSON.parse(requiredFields))
-        data=await memories.find().select("-createdAt") // - sign for explicitly exclude fields here the all fields will return except createdAt
-        
-    }
-    else{
-        data = await memories.find();
-    }
+    // if(req.query.fields){
+    //     const fields:string=JSON.stringify(req?.query?.fields)
+    //     const requiredFields=fields.split(",").join(" ")
+
+    //     // data=await memories.find().select(JSON.parse(requiredFields))
+    //     data=await memories.find().select("-createdAt") // - sign for explicitly exclude fields here the all fields will return except createdAt
+
+    // }
+    // else{
+    //     data = await memories.find();
+    // }
+
+    // ************ Pagination
+    // if (req.query.page) {
+    //   const page = Number(req.query.page);
+    //   const limit =Number(req.query.limit)||1    
+    //   const skipPage = page * limit
+    //   const notValidPagination = await validPagination(skipPage);
+    //   if (notValidPagination) {
+    //     throw new Error('This Page Does Not Exists');
+    //   }
+    //   data = await memories.find().skip(skipPage).limit(1);
+    // }
     res.send({
-        status: 'success',
+      status: 'success',
       length: data?.length,
       data,
     });

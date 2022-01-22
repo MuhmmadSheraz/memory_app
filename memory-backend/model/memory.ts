@@ -7,7 +7,7 @@ const currentDate=new Date()
     },
     description:{
         type:String,
-        
+        require:[true,"description is required for memory"]
     },
     image:{
         type:String,
@@ -23,7 +23,20 @@ const currentDate=new Date()
        
     },
     tags:{
-        type:[String]
+        type:[String],
+        require:[true,"tags are required"]
+    },
+    isPublic:{
+        type:Boolean,
+        require:[true,"memory type is required public or private"]
     }
+})
+
+// Query Middleware for not showing any private memory in getMemories
+// Here we use reg. expression for any find method or findById should not return private memory
+// regex for allFind ==> /^find/
+memorySchema.pre("find",function(next){
+    this.find({isPublic:{$ne:false}});
+    next()
 })
 export const memories=mongoose.model("Memories",memorySchema)
