@@ -1,6 +1,14 @@
 import mongoose, { Schema } from "mongoose";
  import validator from "validator"
  import bcrypt from "bcrypt"
+ export interface User extends Document {
+    name: string,
+    profilePicture: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+    correctPassword:(candidatePassword:string,userPassword:string)=>boolean
+}
 const userSchema:Schema= new Schema({
     name:{
         type:String,
@@ -21,17 +29,21 @@ const userSchema:Schema= new Schema({
     password:{
         type:String,
         required:[true,"password is required"],
-        minlength:6
-
+        minlength:6,
+        select:false
+        
     },
     confirmPassword:{
         type:String,
         required:[true,"confirmPassword is required"],
         minlength:6,
+        select:false
         
 
     },
 })
+
+
 // Middleware for password confirmation
 userSchema.pre('validate', function(next) {
     if (this.confirmPassword&&(this.password !== this.confirmPassword)) {
@@ -39,6 +51,9 @@ userSchema.pre('validate', function(next) {
     }
     next();
 });
+
+
+// Middleware for authenticate password
 
 // Password hashing using middleware
 userSchema.pre("save",async function(next){
@@ -48,4 +63,8 @@ userSchema.pre("save",async function(next){
     this.confirmPassword=undefined
     next()
 })
-export const userModal=mongoose.model("users",userSchema)
+userSchema.methods.correctPassword=async function (candidatePassword:string,userPassword:string) {
+    return await bcrypt.compare(candidatePassword,userPassword)
+   
+}
+export const userModal=mongoose.model<User & mongoose.Document>("users",userSchema)
