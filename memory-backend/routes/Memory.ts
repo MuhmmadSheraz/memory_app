@@ -1,7 +1,7 @@
+import { Router } from "express";
 import { updateMemory } from './../controller/Memory/UpdateMemory';
     import { getMemory } from './../controller/Memory/GetMemory';
     import { createMemory } from './../controller/Memory/CreateMemory';
-    import { Router } from "express";
     import {getAllMemories} from "../controller/Memory/GetMemories"
     import { deleteMemory } from '../controller/Memory/DeleteMemory';
 import { getMemoryByTag } from '../controller/Memory/GetMemoryByTags';
