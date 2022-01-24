@@ -1,5 +1,6 @@
+import jwt, { JwtPayload }  from 'jsonwebtoken';
 import { generateError } from './../../helper/generateError';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { User, userModal } from './../../model/user';
 import { generateToken } from '../../helper/generateToken';
 export const signUp = async (req: Request, res: Response) => {
@@ -43,3 +44,21 @@ export const signIn = async (req: Request, res: Response) => {
     data: user,
   });
 };
+
+export const protect=async(req:Request,res:Response,next:NextFunction)=>{
+    const headers:string =req?.headers.authorization||""
+    const authToken=headers?.split(" ")[1]
+    if(!authToken) return generateError(res,500,"Unauthorized request")
+   try {
+    const decoded= jwt.verify(authToken,process.env.JWT_SECRECT||"") as JwtPayload
+    const validUser=await userModal.findById(decoded?.id)
+    if(!validUser) return  generateError(res,500,"This token is not belong to any user")
+    next()
+   } catch (error) {
+       generateError(res,500,"Invalid Token")
+       console.log(error)
+       
+   }
+    // next()
+
+}

@@ -1,3 +1,4 @@
+import { protect } from './../controller/Authentication/auth';
 import { Router } from "express";
 import { updateMemory } from './../controller/Memory/UpdateMemory';
     import { getMemory } from './../controller/Memory/GetMemory';
@@ -6,7 +7,7 @@ import { updateMemory } from './../controller/Memory/UpdateMemory';
     import { deleteMemory } from '../controller/Memory/DeleteMemory';
 import { getMemoryByTag } from '../controller/Memory/GetMemoryByTags';
     const memoryRoutes=Router()
-    memoryRoutes.route(`/memories`).get(getAllMemories)
+    memoryRoutes.route(`/memories`).get(protect,getAllMemories)
     memoryRoutes.get(`/memories/:id`,getMemory)
     memoryRoutes.get(`/memories-by-tag`,getMemoryByTag)
     memoryRoutes.patch(`/update-memory/:id`,updateMemory)
