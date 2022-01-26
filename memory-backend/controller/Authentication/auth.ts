@@ -1,4 +1,4 @@
-import jwt, { JwtPayload }  from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { generateError } from './../../helper/generateError';
 import { NextFunction, Request, Response } from 'express';
 import { User, userModal } from './../../model/user';
@@ -10,20 +10,21 @@ export const signUp = async (req: Request, res: Response) => {
       email: req.body.email,
       profilePicture: req.body.profilePicture,
       password: req.body.password,
-      confirmPassword: req.body.confirmPassword,
+      confirmPassword: req.body.confirmPassword
     });
     const token = generateToken(newUser._id);
     res.send({
       status: 200,
       token,
       data: newUser,
-      message: 'user created Successfully',
+      message: 'user created Successfully'
     });
-  } catch (error:any) {
+  } catch (error: any) {
     generateError(res, 500, error.message);
   }
 };
 export const signIn = async (req: Request, res: Response) => {
+  console.log("Sign In")
   const { email, password } = req?.body;
   if (!email || !password)
     return generateError(res, 500, 'email and password are required');
@@ -41,24 +42,43 @@ export const signIn = async (req: Request, res: Response) => {
     status: 200,
     message: 'Signed In Successfully',
     token,
-    data: user,
+    data: user
   });
 };
 
-export const protect=async(req:Request,res:Response,next:NextFunction)=>{
-    const headers:string =req?.headers.authorization||""
-    const authToken=headers?.split(" ")[1]
-    if(!authToken) return generateError(res,500,"Unauthorized request")
-   try {
-    const decoded= jwt.verify(authToken,process.env.JWT_SECRECT||"") as JwtPayload
-    const validUser=await userModal.findById(decoded?.id)
-    if(!validUser) return  generateError(res,500,"This token is not belong to any user")
-    next()
-   } catch (error) {
-       generateError(res,500,"Invalid Token")
-       console.log(error)
-       
-   }
-    // next()
+export const forgotPassword = async (req: Request, res: Response) => {
+  console.log("Forgot API")
+  // 1) Find User By Email
+  const user: User | any = await userModal.findOne({ email: req?.body?.email });
+  if (!user) {
+     generateError(res, 404, 'No user found with this email');
+  }
+  // 2) Generate Password Expiry Token and save it to DB
+  await user?.createResetPasswordToken();
+  await user.save();
 
-}
+  
+};
+
+export const protect = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const headers: string = req?.headers.authorization || '';
+  const     authToken = headers?.split(' ')[1];
+  if (!authToken) return generateError(res, 500, 'Unauthorized request');
+  try {
+    const decoded = jwt.verify(
+      authToken,
+      process.env.JWT_SECRECT || ''
+    ) as JwtPayload;
+    const validUser = await userModal.findById(decoded?.id);
+    if (!validUser)
+      return generateError(res, 500, 'This token is not belong to any user');
+    next();
+  } catch (error) {
+    generateError(res, 500, 'Invalid Token');
+    console.log(error);
+  }
+};

@@ -5,7 +5,7 @@ export const getAllMemories = async (req: Request, res: Response) => {
   let data: any;
   try {
     // finds all the docs.
-     data=await memories.find()
+    data = await memories.find();
 
     // Filter Methods
 
@@ -59,7 +59,7 @@ export const getAllMemories = async (req: Request, res: Response) => {
     // ************ Pagination
     // if (req.query.page) {
     //   const page = Number(req.query.page);
-    //   const limit =Number(req.query.limit)||1    
+    //   const limit =Number(req.query.limit)||1
     //   const skipPage = page * limit
     //   const notValidPagination = await validPagination(skipPage);
     //   if (notValidPagination) {
@@ -67,16 +67,16 @@ export const getAllMemories = async (req: Request, res: Response) => {
     //   }
     //   data = await memories.find().skip(skipPage).limit(1);
     // }
-    console.log(req.query.tags)
+    console.log(req.query.tags);
     res.send({
       status: 'success',
       length: data?.length,
-      data,
+      data
     });
-  } catch (error:any) {
+  } catch (error: any) {
     res.send({
       status: 500,
-      message: error?.message,
+      message: error?.message
     });
   }
 };
