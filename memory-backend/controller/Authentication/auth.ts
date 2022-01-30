@@ -47,26 +47,36 @@ export const signIn = async (req: Request, res: Response) => {
 };
 
 export const forgotPassword = async (req: Request, res: Response) => {
+  // FD ---> Send Me Reset Email
+
   console.log("Forgot API")
   // 1) Find User By Email
   const user: User | any = await userModal.findOne({ email: req?.body?.email });
   if (!user) {
-     generateError(res, 404, 'No user found with this email');
+     generateError(res, 404, 'No user found with this email');  
   }
   // 2) Generate Password Expiry Token and save it to DB
   await user?.createResetPasswordToken();
   await user.save();
+  // TODO: Send Email
 
+  res.send({
+    status:200,
+    message:"Reset link has been sent to your email"
+  })
   
 };
+export const resetPassword = async (req: Request, res: Response) => {
+  
+}
 
 export const protect = async (
   req: Request,
-  res: Response,
+  res: Response,  
   next: NextFunction
 ) => {
   const headers: string = req?.headers.authorization || '';
-  const     authToken = headers?.split(' ')[1];
+  const authToken = headers?.split(' ')[1];
   if (!authToken) return generateError(res, 500, 'Unauthorized request');
   try {
     const decoded = jwt.verify(
