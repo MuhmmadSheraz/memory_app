@@ -1,3 +1,4 @@
+import { sendEmail } from './../../helper/email';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { generateError } from './../../helper/generateError';
 import { NextFunction, Request, Response } from 'express';
@@ -56,10 +57,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
      generateError(res, 404, 'No user found with this email');  
   }
   // 2) Generate Password Expiry Token and save it to DB
-  await user?.createResetPasswordToken();
+  const resetToken=await user?.createResetPasswordToken();
+  const message=`Your Password Reset Link is ---::----- ${resetToken}`
   await user.save();
-  // TODO: Send Email
-
+  sendEmail({email:user?.email,message})  
   res.send({
     status:200,
     message:"Reset link has been sent to your email"

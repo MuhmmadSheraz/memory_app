@@ -1,21 +1,32 @@
 import nodemailer from "nodemailer"
+interface Props {
+    message: string,
+    email: string
 
-export const sendEmail =async(options:any)=>{
+}
+export const sendEmail = async ({ email, message }: Props) => {
     // Create Transporter 
 
-    const transporter:any =nodemailer.createTransport({
+    console.log(email, message)
+    const transporter: any = nodemailer.createTransport({
         // @ts-ignore
         host: process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,
-        auth:{
-            user:process.env.EMAIL_USERNAME,
-            pass:process.env.EMAIL_PASSWORD,
+        auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD,
         }
     })
-    const mailOptions={
-        from :"admin@admin.com",
-        to:options.email,
-        text:options.message
+    const mailOptions = {
+        from: "admin@admin.com",
+        to: email,
+        text: message,
+        subject: "Password reset procedure",
     }
-    await transporter.sendEmail(mailOptions)
+    try {
+        await transporter.sendMail(mailOptions)
+    } catch (error) {
+        console.log(error)
+
+    }
 }

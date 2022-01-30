@@ -77,7 +77,7 @@ userSchema.methods.createResetPasswordToken = function () {
   const hasedToken = crypto
     .createHash('sha256')
     .update(resetToken)
-    .digest('hex'); //hashing token
+    .digest('hex'); 
   this.passwordResetToken = hasedToken; // will save hashed token in db for security purpose
   this.expiryOfPasswordResetToken = Date.now() + 10 * 60 * 1000; // 10 mins
   return resetToken;
