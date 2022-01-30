@@ -79,7 +79,7 @@ userSchema.methods.createResetPasswordToken = function () {
     .update(resetToken)
     .digest('hex'); 
   this.passwordResetToken = hasedToken; // will save hashed token in db for security purpose
-  this.expiryOfPasswordResetToken = Date.now() + 10 * 60 * 1000; // 10 mins
+  this.expiryOfPasswordResetToken = Date.now() + 30 * 60 * 1000; // 10 mins
   return resetToken;
 };
 

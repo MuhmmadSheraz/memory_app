@@ -1,5 +1,6 @@
 import { sendEmail } from './../../helper/email';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import crypto from "crypto"
 import { generateError } from './../../helper/generateError';
 import { NextFunction, Request, Response } from 'express';
 import { User, userModal } from './../../model/user';
@@ -67,7 +68,46 @@ export const forgotPassword = async (req: Request, res: Response) => {
   })
   
 };
+export const validateResetPasswordToken = async (req: Request, res: Response) => {
+  // For validating if token and expiry then only show green single to render {Reset Password Page}
+  let resetToken=req.params.token;
+  // hashing the token 
+  resetToken=crypto.createHash('sha256')
+  .update(resetToken)
+  .digest('hex'); 
+  
+  const user=await userModal.findOne({passwordResetToken:resetToken,expiryOfPasswordResetToken:{$gt:Date.now()}})
+  if(!user) generateError(res,404,"Invalid Token")
+  res.send({
+    status:200,
+    message:"Request Successful"
+  })
+  
+}
 export const resetPassword = async (req: Request, res: Response) => {
+  // For validating if token and expiry then only show green single to render {Reset Password Page}
+  let resetToken=req.params.token;
+  // hashing the token 
+  resetToken=crypto.createHash('sha256')
+  .update(resetToken)
+  .digest('hex'); 
+  
+try {
+  const user:any=await userModal.findOne({passwordResetToken:resetToken,expiryOfPasswordResetToken:{$gt:Date.now()}})
+  if(!user) generateError(res,404,"Invalid Token")
+   
+  // Finally updating the password
+  user.password=req?.body.password
+  user.passwordResetToken=undefined
+  user.expiryOfPasswordResetToken=undefined
+  user.save()
+  res.send({
+    status:201,
+    message:"Password has updated"
+  })
+} catch (error:any) {
+  generateError(res,500,error.message)
+}
   
 }
 
