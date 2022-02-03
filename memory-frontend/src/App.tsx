@@ -5,9 +5,10 @@ import Login from './Views/SignIn';
 import SignUp from './Views/SignUp';
 import Home from './Views/Home';
 import CreateMemory from './Views/CreateMemory';
+import MemoryDetail from './Views/MemoryDetail';
 
 function App() {
-    return <CreateMemory />;
+    return <MemoryDetail />;
 }
 
 export default App;

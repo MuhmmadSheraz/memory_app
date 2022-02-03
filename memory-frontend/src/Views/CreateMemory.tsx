@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Header } from '../Componets/Header';
+import { InputTag } from '../Componets/InputTag';
 
 type Inputs = {
     title: string;
@@ -64,24 +65,9 @@ const CreateMemory = () => {
                         className="block w-full sm:w-3/4 md:w-1/2  py-2  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm"
                     />
                     <div className=" w-full   sm:w-3/4 md:w-1/2  py-1  bg-white  outline-gray-400 border-gray-200 border-2 my-2 sm:px-3 rounded-lg text-lg shadow-sm">
-                        <div className="m-1  text-xs inline-flex relative items-center font-bold leading-sm uppercase px-2 sm:px-3 py-2 bg-green-200 text-green-700 rounded-md">
-                            Moon Light
-                            <span className="text-white z-50 block bg-red-500 text-center  h-5 w-5 ml-1 sm:ml-4 p-1 pt-[2px] rounded-full">
-                                x
-                            </span>
-                        </div>
-                        <div className="m-1 text-xs inline-flex relative items-center font-bold leading-sm uppercase px-2 sm:px-3 py-2 bg-green-200 text-green-700 rounded-md">
-                            Birthday
-                            <span className="text-white z-50 block bg-red-500 text-center  h-5 w-5 ml-1 sm:ml-4 p-1 pt-[2px] rounded-full">
-                                x
-                            </span>
-                        </div>
-                        <div className="m-1 text-xs inline-flex relative items-center font-bold leading-sm uppercase px-2 sm:px-3 py-2 bg-green-200 text-green-700 rounded-md">
-                            Enjoying
-                            <span className="text-white z-50 block bg-red-500 text-center  h-5 w-5 ml-1 sm:ml-4 p-1 pt-[2px] rounded-full">
-                                x
-                            </span>
-                        </div>
+                        <InputTag title="Moon" />
+                        <InputTag title="Moon" />
+                        <InputTag title="Moon" />
                     </div>
                     {errors.tags && (
                         <span className="m_0  text-red-500 ">
