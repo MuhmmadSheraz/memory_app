@@ -2,7 +2,7 @@ import { BiSearch } from 'react-icons/bi';
 
 export const Header = () => {
     return (
-        <div className="flex justify-between items-center bg-white   min-w-screen px-8 p-3 max-h-[20%] shadow-md ">
+        <div className="flex justify-between items-center bg-white   min-w-screen px-8 p-3 max-h-[20%] shadow-md fixed top-0 w-full z-10 ">
             <h1 className=" text-2xl font-semibold text-black-500 pb-[0.5%]">
                 Memory App
             </h1>

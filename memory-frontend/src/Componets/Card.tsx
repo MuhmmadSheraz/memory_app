@@ -51,20 +51,6 @@ export const Card = () => {
             <div className="ml-5 mb-3 text-gray-500 text-sm lg:text-base">
                 We, 26 January 2021
             </div>
-
-            {/* <div className="px-4 mt-2">
-                <div className="flex justify-between items-center">
-                    <p className="text-2xl font-semibold">
-                        A Day with Family and friends{' '}
-                    </p>
-                    <BsHeartFill
-                        size={22}
-                        className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
-                    />
-                </div>
-
-                <p className="my-2  text-left   ">Mon-4-22</p>
-            </div> */}
         </div>
     );
 };

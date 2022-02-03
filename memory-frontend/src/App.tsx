@@ -4,9 +4,10 @@ import './App.css';
 import Login from './Views/SignIn';
 import SignUp from './Views/SignUp';
 import Home from './Views/Home';
+import CreateMemory from './Views/CreateMemory';
 
 function App() {
-    return <Home />;
+    return <CreateMemory />;
 }
 
 export default App;
