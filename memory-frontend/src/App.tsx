@@ -6,9 +6,10 @@ import SignUp from './Views/SignUp';
 import Home from './Views/Home';
 import CreateMemory from './Views/CreateMemory';
 import MemoryDetail from './Views/MemoryDetail';
+import ForgotPassword from './Views/ForgotPassword';
 
 function App() {
-    return <MemoryDetail />;
+    return <ForgotPassword />;
 }
 
 export default App;
