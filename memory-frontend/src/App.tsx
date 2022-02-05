@@ -8,7 +8,7 @@ import CreateMemory from './Views/CreateMemory';
 import MemoryDetail from './Views/MemoryDetail';
 
 function App() {
-    return <MemoryDetail />;
+    return <Login  />;
 }
 
 export default App;

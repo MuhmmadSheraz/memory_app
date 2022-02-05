@@ -1,7 +1,5 @@
-import React from 'react';
 import { Card } from '../Componets/Card';
 import { Header } from '../Componets/Header';
-
 const Home = () => {
     return (
         <>
