@@ -7,9 +7,10 @@ import Home from './Views/Home';
 import CreateMemory from './Views/CreateMemory';
 import MemoryDetail from './Views/MemoryDetail';
 import ForgotPassword from './Views/ForgotPassword';
+import ResertPassword from './Views/ResetPassword';
 
 function App() {
-    return <ForgotPassword />;
+    return <ResertPassword />;
 }
 
 export default App;
