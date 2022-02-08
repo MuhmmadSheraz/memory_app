@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv';
+import cors from "cors"
 import process from 'process';
 import memoryRoutes from './routes/Memory';
 import { connectDB } from './helper/dbConnection';
@@ -10,6 +11,7 @@ dotenv.config({
 });
 // Express Middlewares
 app.use(express.json());
+app.use(cors({origin:true,credentials: true}))
 connectDB();
 app.use(`/api`, memoryRoutes);
 app.use(`/api`, authRoutes);

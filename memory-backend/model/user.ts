@@ -23,7 +23,7 @@ const userSchema: Schema = new Schema({
   },
   profilePicture: {
     type: String,
-    required: [true, 'profilePicture is required']
+    required: [false, 'profilePicture is required']
   },
   password: {
     type: String,

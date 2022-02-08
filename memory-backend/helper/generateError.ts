@@ -5,8 +5,7 @@ export const generateError = (
   status: number,
   message: string
 ) => {
-  return res.send({
-    status: status,
-    message: message
-  });
+ return res.status(status).send({
+    message
+ });
 };

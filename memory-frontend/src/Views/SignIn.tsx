@@ -4,6 +4,7 @@ import * as yup from 'yup'
 import AuthInput from '../Componets/AuthInput'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 type Inputs = {
   email: string
@@ -19,8 +20,9 @@ const schema = yup
 const Login = () => {
   const navigate = useNavigate()
   useEffect(() => {
-    navigate('/')
-  }, [])
+    console.log('layout effect')
+    return navigate('/')
+  }, [navigate])
   const {
     register,
     handleSubmit,
@@ -28,7 +30,17 @@ const Login = () => {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   })
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    toast('🦄 Logged In', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    })
+  }
 
   return (
     <div className="bg-lime-100 min-h-screen flex justify-center items-center  flex-col min-w-screen">

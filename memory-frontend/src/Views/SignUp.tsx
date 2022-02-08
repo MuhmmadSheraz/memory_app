@@ -3,6 +3,12 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import * as yup from 'yup'
 import AuthInput from '../Componets/AuthInput'
+import { useMutation } from 'react-query'
+import { onSignUp } from '../Services/API/api'
+import { toast } from 'react-toastify'
+import { TailSpin } from 'react-loader-spinner'
+import { AxiosError } from 'axios'
+import { SignUpUser } from '../Types/Auth'
 
 type Inputs = {
   email: string
@@ -24,10 +30,51 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   })
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+
+  const handleSignUp = useMutation(
+    async (body: SignUpUser) => {
+      return await onSignUp(body)
+    },
+    {
+      onSuccess: () => {
+        toast('🦄 Signed In', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      },
+      onError: (err) => {
+        const error = err as AxiosError
+        toast(error.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      },
+    }
+  )
+
+  const onSubmit: SubmitHandler<Inputs> = async () => {
+    const body = {
+      email: getValues()?.email,
+      name: getValues()?.name,
+      password: getValues()?.password,
+      confirmPassword: getValues()?.confirmPassword,
+    }
+    handleSignUp.mutateAsync(body)
+  }
 
   return (
     <div className="bg-lime-100 min-h-screen flex justify-center items-center  flex-col min-w-screen">
@@ -78,10 +125,20 @@ const SignUp = () => {
           </span>
         )}
         <button
+          disabled={handleSignUp.isLoading}
           type="submit"
-          className="w-[30%] sm:w-[25%] md:w-[15%] lg:w-[12%] border py-2 border-lime-500 text-lg outline-none  rounded-md text-lime-500 hover:bg-lime-500 hover:text-white   transition-all ease-out duration-300"
+          className="w-[30%] text-center flex justify-center items-center sm:w-[25%] md:w-[15%] lg:w-[12%] border py-2 border-lime-500 text-lg outline-none  rounded-md text-lime-500 hover:bg-lime-500 hover:text-white   transition-all ease-out duration-300"
         >
-          Sign Up
+          {handleSignUp.isLoading ? (
+            <TailSpin
+              height="30"
+              width="30"
+              color="green"
+              ariaLabel="loading"
+            />
+          ) : (
+            'Sign In'
+          )}
         </button>
       </form>
     </div>
