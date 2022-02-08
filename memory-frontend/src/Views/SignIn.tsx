@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import AuthInput from '../Componets/AuthInput'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -19,10 +19,10 @@ const schema = yup
 
 const Login = () => {
   const navigate = useNavigate()
+  const [loggedIn, setLoggedIn] = useState<boolean>(false)
   useEffect(() => {
-    console.log('layout effect')
-    return navigate('/')
-  }, [navigate])
+    loggedIn && navigate('/')
+  }, [])
   const {
     register,
     handleSubmit,
