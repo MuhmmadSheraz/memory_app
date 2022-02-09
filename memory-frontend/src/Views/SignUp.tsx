@@ -40,27 +40,31 @@ const SignUp = () => {
       return await onSignUp(body)
     },
     {
-      onSuccess: () => {
-        toast('🦄 Signed In', {
+      onSuccess: (data) => {
+        localStorage.setItem('user_Session', JSON.stringify(data.data.token))
+        toast('🦄 Signed Up', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
+          type: 'success',
         })
       },
       onError: (err) => {
         const error = err as AxiosError
-        toast(error.message, {
+        toast(error.response?.data.message, {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 3000,
+
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
+          type: 'error',
         })
       },
     }
@@ -137,7 +141,7 @@ const SignUp = () => {
               ariaLabel="loading"
             />
           ) : (
-            'Sign In'
+            'Sign Up'
           )}
         </button>
       </form>

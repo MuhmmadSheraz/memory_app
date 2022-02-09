@@ -3,8 +3,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import AuthInput from '../Componets/AuthInput'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useMutation } from 'react-query'
+import { SignInUser } from '../Types/Auth'
+import { onSignIn } from '../Services/API/api'
+import { AxiosError } from 'axios'
+import useSession from '../Helper/useSession'
+import { TailSpin } from 'react-loader-spinner'
 
 type Inputs = {
   email: string
@@ -19,9 +25,10 @@ const schema = yup
 
 const Login = () => {
   const navigate = useNavigate()
-  const [loggedIn, setLoggedIn] = useState<boolean>(false)
+  const validUser = useSession('user_Session', null)
+  console.log(validUser)
   useEffect(() => {
-    loggedIn && navigate('/')
+    !!validUser?.token && navigate('/')
   }, [])
   const {
     register,
@@ -30,16 +37,45 @@ const Login = () => {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   })
+  const handleSignIn = useMutation(
+    async ({ email, password }: SignInUser) => {
+      return await onSignIn({ email, password })
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data)
+        localStorage.setItem('user_Session', JSON.stringify(data.data.user))
+        navigate('/')
+        toast('Logged In', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          type: 'success',
+        })
+      },
+      onError: (error) => {
+        const err = error as AxiosError
+        console.log(err.response?.data.message)
+        toast(err.response?.data.message, {
+          position: 'top-right',
+          autoClose: 3000,
+
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          type: 'error',
+        })
+      },
+    }
+  )
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    toast('🦄 Logged In', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    })
+    handleSignIn.mutateAsync({ email: data.email, password: data.password })
   }
 
   return (
@@ -72,10 +108,20 @@ const Login = () => {
           </span>
         )}
         <button
+          disabled={handleSignIn.isLoading}
           type="submit"
-          className="w-[30%] sm:w-[25%] md:w-[15%] lg:w-[12%] border py-2 border-lime-500 text-lg outline-none  rounded-md text-lime-500 hover:bg-lime-500 hover:text-white   transition-all ease-out duration-300"
+          className="w-[30%] text-center flex justify-center items-center sm:w-[25%] md:w-[15%] lg:w-[12%] border py-2 border-lime-500 text-lg outline-none  rounded-md text-lime-500 hover:bg-lime-500 hover:text-white   transition-all ease-out duration-300"
         >
-          Sign In
+          {handleSignIn.isLoading ? (
+            <TailSpin
+              height="30"
+              width="30"
+              color="green"
+              ariaLabel="loading"
+            />
+          ) : (
+            'Sign In'
+          )}
         </button>
       </form>
     </div>

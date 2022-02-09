@@ -4,3 +4,7 @@ export type SignUpUser = {
   confirmPassword: string
   name: string
 }
+export type SignInUser = {
+  email: string
+  password: string
+}

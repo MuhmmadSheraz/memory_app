@@ -1,4 +1,4 @@
-import { SignUpUser } from './../../Types/Auth'
+import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
 
 const onSignUp = async (body: SignUpUser) => {
@@ -9,4 +9,12 @@ const onSignUp = async (body: SignUpUser) => {
     data: body,
   })
 }
-export { onSignUp }
+const onSignIn = async (body: SignInUser) => {
+  console.log('REQ_BODY', body)
+  return await Instance({
+    method: 'POST',
+    url: '/api/users/sign-in',
+    data: body,
+  })
+}
+export { onSignUp, onSignIn }

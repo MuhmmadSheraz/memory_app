@@ -5,6 +5,8 @@ import { generateError } from './../../helper/generateError';
 import { NextFunction, Request, Response } from 'express';
 import { User, userModal } from './../../model/user';
 import { generateToken } from '../../helper/generateToken';
+
+
 export const signUp = async (req: Request, res: Response) => {
   try {
     const newUser = await userModal.create({
@@ -23,14 +25,15 @@ export const signUp = async (req: Request, res: Response) => {
     });
     res.send({
       status: 200,
-      token,
-      data: newUser,
+      user:{token,newUser},
       message: 'user created Successfully'
     });
   } catch (error: any) {
     generateError(res, 500, error.message);
   }
 };
+
+
 export const signIn = async (req: Request, res: Response) => {
   console.log('Sign In');
   const { email, password } = req.body;
@@ -54,10 +57,10 @@ export const signIn = async (req: Request, res: Response) => {
   res.send({
     status: 200,
     message: 'Signed In Successfully',
-    token,
-    data: user
+    user:{token,user}
   });
 };
+
 
 export const forgotPassword = async (req: Request, res: Response) => {
   // FD ---> Send Me Reset Email
@@ -78,6 +81,8 @@ export const forgotPassword = async (req: Request, res: Response) => {
     message: 'Reset link has been sent to your email'
   });
 };
+
+
 export const validateResetPasswordToken = async (
   req: Request,
   res: Response
@@ -97,6 +102,8 @@ export const validateResetPasswordToken = async (
     message: 'Request Successful'
   });
 };
+
+
 export const resetPassword = async (req: Request, res: Response) => {
   // For validating if token and expiry then only show green single to render {Reset Password Page}
   let resetToken = req.params.token;
@@ -123,6 +130,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     generateError(res, 500, error.message);
   }
 };
+
 
 export const protect = async (
   req: Request,
