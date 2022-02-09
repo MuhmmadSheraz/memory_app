@@ -44,6 +44,8 @@ const Login = () => {
     {
       onSuccess: (data) => {
         console.log(data)
+
+        // document.cookie = data.data.headers.get('set-cookie')
         localStorage.setItem('user_Session', JSON.stringify(data.data.user))
         navigate('/')
         toast('Logged In', {

@@ -22,7 +22,7 @@ export const signUp = async (req: Request, res: Response) => {
     res.cookie('jwt', token, {
       expires: new Date((Date.now() + parseInt(expiry)) * 24 * 60 * 60 * 1000),
       httpOnly: true
-    });
+    }).status(200);
     res.send({
       status: 200,
       user:{token,newUser},
@@ -53,8 +53,7 @@ export const signIn = async (req: Request, res: Response) => {
   res.cookie('jwt', token, {
     expires: new Date((Date.now() + parseInt(expiry)) * 24 * 60 * 60 * 1000),
     httpOnly: true
-  });
-  res.send({
+  }).send({
     status: 200,
     message: 'Signed In Successfully',
     user:{token,user}
