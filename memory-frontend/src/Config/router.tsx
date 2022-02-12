@@ -4,7 +4,9 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
+import CreateMemory from '../Views/CreateMemory'
 import Home from '../Views/Home'
+import MemoryDetail from '../Views/MemoryDetail'
 import Login from '../Views/SignIn'
 import SignUp from '../Views/SignUp'
 
@@ -23,7 +25,23 @@ export default function MainRouter() {
               <Home />
             </ProtectedRoute>
           }
-        ></Route>
+        />
+        <Route
+          path="/:id"
+          element={
+            <ProtectedRoute>
+              <MemoryDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create"
+          element={
+            <ProtectedRoute>
+              <CreateMemory />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" />}></Route>
       </Routes>
     </Router>

@@ -2,6 +2,7 @@ import { memories } from './../../model/memory';
 import { Request, Response } from 'express';
 export const getMemory = async (req: Request, res: Response) => {
   const { params } = req;
+  console.log("params",params)
   try {
     const data = await memories.findById(params?.id);
     res.send({

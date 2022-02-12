@@ -2,12 +2,24 @@ import { BsFillBookmarkFill, BsHeartFill, BsThreeDots } from 'react-icons/bs'
 import { FaComment } from 'react-icons/fa'
 import dayjs from 'dayjs'
 import { Memory } from '../Types/Memory'
+import { useNavigate } from 'react-router-dom'
 interface Props {
   data: Memory
 }
 export const Card = ({ data }: Props) => {
+  const navigate = useNavigate()
+  const handleShowDetail = () => {
+    console.log(data)
+    navigate(`/${data?._id}`)
+  }
+  const handleLike = (e: any) => {
+    e.stopPropagation() // stops overriding show detail click
+  }
   return (
-    <div className="bg-white overflow-hidden  rounded-3xl shadow-md drop-shadow-sm transition-all ease-in-out duration-500 hover:-translate-y-1 cursor-pointer hover:shadow-gray-200 px-1">
+    <div
+      onClick={handleShowDetail}
+      className="bg-white overflow-hidden  rounded-3xl shadow-md drop-shadow-sm transition-all ease-in-out duration-500 hover:-translate-y-1 cursor-pointer hover:shadow-gray-200 px-1"
+    >
       {/* User Header */}
       <div className="my-3 mx-2  flex items-center justify-between">
         <div className="flex items-center">
@@ -27,6 +39,7 @@ export const Card = ({ data }: Props) => {
       <div className="my-3 mx-2 flex items-center justify-between">
         <div className="flex space-x-3 items-center">
           <BsHeartFill
+            onClick={handleLike}
             size={18}
             className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
           />
