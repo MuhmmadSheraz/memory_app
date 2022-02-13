@@ -1,9 +1,8 @@
 import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
-const user = JSON.parse(localStorage.getItem('user_Session')!)
+const authCred = JSON.parse(localStorage.getItem('user_Session')!)
 // Authentication
 const onSignUp = async (body: SignUpUser) => {
-  console.log('REQ_BODY', body)
   return await Instance({
     method: 'POST',
     url: '/api/users/sign-up',
@@ -11,7 +10,6 @@ const onSignUp = async (body: SignUpUser) => {
   })
 }
 const onSignIn = async (body: SignInUser) => {
-  console.log('REQ_BODY', body)
   return await Instance({
     method: 'POST',
     url: '/api/users/sign-in',
@@ -21,12 +19,14 @@ const onSignIn = async (body: SignInUser) => {
 }
 // Memories
 const getMemories = async () => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
   return await Instance({
     method: 'GET',
     url: '/api/memories',
     withCredentials: true,
     headers: {
-      authorization: `Bearer ${user?.token}`,
+      authorization: `Bearer ${authCred?.token}`,
     },
   })
 }
@@ -36,7 +36,7 @@ const getMemory = async (id: string) => {
     url: `/api/memories/${id}`,
     withCredentials: true,
     headers: {
-      authorization: `Bearer ${user?.token}`,
+      authorization: `Bearer ${authCred?.token}`,
     },
   })
 }

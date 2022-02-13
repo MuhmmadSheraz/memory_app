@@ -35,7 +35,6 @@ export const signUp = async (req: Request, res: Response) => {
 
 
 export const signIn = async (req: Request, res: Response) => {
-  console.log('Sign In');
   const { email, password } = req.body;
   if (!email || !password)
     return generateError(res, 500, 'email and password are required');
@@ -48,7 +47,7 @@ export const signIn = async (req: Request, res: Response) => {
     user.password
   );
   if (!correctPassword) return generateError(res, 500, 'Incorrect password');
-  const token = generateToken(user?._id);
+  const token = generateToken(user?._id.toString());
   const expiry  = process.env.JWT_COOKIE_EXPIRY as string
   res.cookie('jwt', token, {
     expires: new Date((Date.now() + parseInt(expiry)) * 24 * 60 * 60 * 1000),
@@ -64,7 +63,6 @@ export const signIn = async (req: Request, res: Response) => {
 export const forgotPassword = async (req: Request, res: Response) => {
   // FD ---> Send Me Reset Email
 
-  console.log('Forgot API');
   // 1) Find User By Email
   const user: User | any = await userModal.findOne({ email: req?.body?.email });
   if (!user) {
@@ -138,7 +136,7 @@ export const protect = async (
 ) => {
   const headers: string = req?.headers.authorization || '';
   const authToken = headers?.split(' ')[1];
-  if (!authToken) return generateError(res, 500, 'Unauthorized request');
+  if (!authToken||authToken===undefined) return generateError(res, 500, 'Unauthorized request');
   try {
     const decoded = jwt.verify(
       authToken,
@@ -150,6 +148,5 @@ export const protect = async (
     next();
   } catch (error) {
     generateError(res, 500, 'Invalid Token');
-    console.log(error);
   }
 };

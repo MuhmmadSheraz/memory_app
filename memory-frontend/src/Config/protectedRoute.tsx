@@ -8,7 +8,6 @@ export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const user = useSession('user_Session', null)
   const [showSidebar, setShowSidebar] = useState<boolean>(false)
   const ref = useRef<HTMLDivElement>(null)
-
   // Outside Click Detection
   useEffect(() => {
     const checkIfClickedOutside = (e: React.MouseEvent | any) => {

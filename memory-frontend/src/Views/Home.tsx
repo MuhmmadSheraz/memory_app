@@ -1,14 +1,25 @@
+import { AxiosError } from 'axios'
 import { TailSpin } from 'react-loader-spinner'
 import { useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 import { Card } from '../Componets/Card'
-import { Header } from '../Componets/Header'
+
 import { getMemories } from '../Services/API/api'
 import { Memory } from '../Types/Memory'
+
 const Home = () => {
+  const navigate = useNavigate()
   const getAllMemories = () => {
     return getMemories()
   }
-  const { data, isError, isLoading } = useQuery('allMemories', getAllMemories)
+  const { data, isError, isLoading, error } = useQuery(
+    'allMemories',
+    getAllMemories,
+    {
+      retry: 0,
+      refetchOnWindowFocus: false,
+    }
+  )
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 pt-20 flex justify-center items-center">
@@ -17,6 +28,11 @@ const Home = () => {
     )
   }
   if (isError) {
+    const err = error as AxiosError
+    if (err?.response?.data.message === 'Invalid Token') {
+      localStorage.removeItem('user_Session')
+      navigate('/login')
+    }
     return (
       <div className="min-h-screen bg-gray-100 pt-20">
         <h1 className="text-center text-4xl">Something went wrong ☹</h1>
