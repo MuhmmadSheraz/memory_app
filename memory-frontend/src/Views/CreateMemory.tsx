@@ -3,6 +3,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { InputTag } from '../Componets/InputTag'
 import { useState } from 'react'
+import { useMutation } from 'react-query'
+import { createMemory } from '../Services/API/api'
+import useSession from '../Helper/useSession'
+import { TailSpin } from 'react-loader-spinner'
+import { useNavigate } from 'react-router-dom'
+import { CreateMemoryBody } from '../Types/Memory'
+import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
 
 type Inputs = {
   title: string
@@ -17,6 +25,9 @@ const schema = yup
   })
   .required()
 const CreateMemory = () => {
+  const navigate = useNavigate()
+
+  const authCreds = useSession('user_Session', null)
   const {
     register,
     handleSubmit,
@@ -25,7 +36,52 @@ const CreateMemory = () => {
     resolver: yupResolver(schema),
   })
   const [tags, setTags] = useState<string[]>([])
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log({ data, tags })
+  const mutation = useMutation(
+    async (body: CreateMemoryBody) => {
+      return await createMemory(body)
+    },
+    {
+      onSuccess: () => {
+        toast('Memory Created', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          type: 'success',
+        })
+        navigate('/')
+      },
+      onError: () => {
+        const err = mutation.error as AxiosError
+        toast(err.response?.data.message, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          type: 'error',
+        })
+      },
+    }
+  )
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data)
+    const body = {
+      tags: tags,
+      userId: authCreds?.user._id,
+      title: data?.title,
+      description: data?.description,
+      image:
+        'https://images.unsplash.com/photo-1644729696782-e4035bcedf75?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60',
+    }
+    mutation.mutateAsync(body)
+  }
+
   const handleOnChange = (e: React.KeyboardEvent | any) => {
     const value = e.target.value
     if (e.keyCode == 32) {
@@ -97,8 +153,24 @@ const CreateMemory = () => {
             <span className="m_0  text-red-500 ">{errors?.image.message}</span>
           )}
 
-          <button className="block w-[33%] sm:w-[20%] md:w-[16%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm">
-            Create
+          <button
+            disabled={mutation.isLoading}
+            type="submit"
+            className="cursor-pointer flex justify-center items-center w-[33%] sm:w-[20%] md:w-[16%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm"
+          >
+            {mutation.isLoading ? (
+              <>
+                <span className="mr-4">Loading</span>
+                <TailSpin
+                  height="25"
+                  width="25"
+                  color="white"
+                  ariaLabel="loading"
+                />
+              </>
+            ) : (
+              'Create Memory'
+            )}
           </button>
         </form>
       </div>

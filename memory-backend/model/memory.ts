@@ -28,6 +28,10 @@ const memorySchema: Schema = new Schema({
   isPublic: {
     type: Boolean,
     require: [true, 'memory type is required public or private']
+  },
+  userId:{
+    type:String,
+    require: [true, 'user is required']
   }
 });
 

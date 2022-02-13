@@ -7,3 +7,9 @@ export type Memory = {
   likes: string[]
   tags: string[]
 }
+export type CreateMemoryBody = {
+  title: string
+  description: string
+  image: string
+  userId: string
+}

@@ -1,3 +1,4 @@
+import { CreateMemoryBody } from './../../Types/Memory'
 import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
 const authCred = JSON.parse(localStorage.getItem('user_Session')!)
@@ -40,4 +41,15 @@ const getMemory = async (id: string) => {
     },
   })
 }
-export { onSignUp, onSignIn, getMemories, getMemory }
+const createMemory = async (body: CreateMemoryBody) => {
+  return await Instance({
+    method: 'POST',
+    url: `/api/create-memory`,
+    withCredentials: true,
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+    data: body,
+  })
+}
+export { onSignUp, onSignIn, getMemories, getMemory, createMemory }

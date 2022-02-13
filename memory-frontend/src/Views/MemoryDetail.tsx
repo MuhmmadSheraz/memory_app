@@ -34,7 +34,7 @@ const MemoryDetail = () => {
         className="absolute top-5 left-5 bg-transparent text-gray-100 cursor-pointer hover:text-black transition-all ease-in-out duration-100"
         size={40}
       />
-      <div className="flex flex-col mt-20 px-3 lg:px-5 w-full md:w-1/2 mb-2 ">
+      <div className="flex flex-col mt-4 md:mt-20 px-3 lg:px-5 w-full md:w-1/2 mb-2 ">
         <h1 className="text-3xl lg:text-4xl font-semibold text-center mt-5">
           {data?.data?.data?.title}
         </h1>
@@ -45,12 +45,9 @@ const MemoryDetail = () => {
           {dayjs(data?.data?.data?.createdAt).format('ddd-MMM-YYYY')}
         </p>
         <div className="mt-5">
-          <InputTag title="Beautiful" />
-          <InputTag title="Beautiful" />
-          <InputTag title="Beautiful" />
-          <InputTag title="Beautiful" />
-          <InputTag title="Beautiful" />
-          <InputTag title="Beautiful" />
+          {data?.data?.data?.tags?.map((tag: string, index: number) => (
+            <InputTag title={tag} key={tag + index} />
+          ))}
         </div>
         <div className="flex items-center justify-between mt-5">
           <div className="flex space-x-4 items-center">
