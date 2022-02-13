@@ -24,7 +24,7 @@ export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     return <Navigate to="/login" replace />
   } else {
     return (
-      <div className="min-h-screen flex justify-center  min-w-screen">
+      <div className="min-h-screen flex justify-center  min-w-screen ">
         <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
         <div className="w-full" ref={ref}>
           <Header showSidebar={showSidebar} setShowSidebar={setShowSidebar} />

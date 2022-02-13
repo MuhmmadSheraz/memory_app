@@ -13,7 +13,7 @@ export const Sidebar = ({ showSidebar, setShowSidebar }: Props) => {
   return (
     <div
       className={`z-20 h-screen  bg-white w-[100vh] sm:w-[75vh] md:w-[50vh] lg:w-[25vw] fixed top-0 left-0 shadow-lg border-r-2 border-gray-200 ${
-        showSidebar ? 'translate-x-0' : '-translate-x-full'
+        showSidebar ? 'translate-x-0 overflow-hidden' : '-translate-x-full'
       } flex justify-center items-center ease-in-out duration-500 transition-all `}
     >
       <ul className="space-y-8 text-black w-full px-4">

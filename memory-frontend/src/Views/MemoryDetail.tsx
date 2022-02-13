@@ -24,17 +24,19 @@ const MemoryDetail = () => {
     )
   }
   return (
-    <div className="flex  flex-col md:flex-row">
-      <img
-        className="h-[50vh] md:min-h-screen w-full md:w-1/2"
-        src={data?.data?.data?.image}
-      />
-      <BsFillArrowLeftCircleFill
-        onClick={() => navigate(-1)}
-        className="absolute top-5 left-5 bg-transparent text-gray-100 cursor-pointer hover:text-black transition-all ease-in-out duration-100"
-        size={40}
-      />
-      <div className="flex flex-col mt-4 md:mt-20 px-3 lg:px-5 w-full md:w-1/2 mb-2 ">
+    <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2">
+      <div className="w-full md:w-1/2">
+        <img
+          className="h-[50vh] md:min-h-screen w-full md:w-1/2 md:fixed top-0 left-0"
+          src={data?.data?.data?.image}
+        />
+        <BsFillArrowLeftCircleFill
+          onClick={() => navigate(-1)}
+          className="hidden md:absolute  md:top-5 left-5 bg-transparent text-gray-100 cursor-pointer hover:text-black transition-all ease-in-out duration-100"
+          size={40}
+        />
+      </div>
+      <div className="flex flex-col mt-4 md:mt-16 px-3 lg:px-5 w-full md:w-1/2  mb-2 ">
         <h1 className="text-3xl lg:text-4xl font-semibold text-center mt-5">
           {data?.data?.data?.title}
         </h1>
