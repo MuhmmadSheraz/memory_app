@@ -1,20 +1,18 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Header } from '../Componets/Header'
 import { InputTag } from '../Componets/InputTag'
+import { useState } from 'react'
 
 type Inputs = {
   title: string
   description: string
-  tags: string
   image: string
 }
 const schema = yup
   .object({
     title: yup.string().required(),
     description: yup.string().required(),
-    tags: yup.string().required(),
     image: yup.string().required(),
   })
   .required()
@@ -26,7 +24,20 @@ const CreateMemory = () => {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   })
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const [tags, setTags] = useState<string[]>([])
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log({ data, tags })
+  const handleOnChange = (e: React.KeyboardEvent | any) => {
+    const value = e.target.value
+    if (e.keyCode == 32) {
+      e.target.value = ''
+      setTags((preValue: any) => [...preValue, value])
+    }
+  }
+  const handleRemoveTag = (tagName: string) => {
+    console.log('removed')
+    const newTags = tags.filter((tag) => tag !== tagName)
+    setTags(newTags)
+  }
   return (
     <div>
       <div className="mt-16 pt-5 flex h-full justify-center min-w-[100vw] items-center flex-col px-5 bg-gray-100 min-h-[90vh]">
@@ -57,18 +68,18 @@ const CreateMemory = () => {
             </span>
           )}
           <input
-            {...register('tags', { required: true })}
+            onKeyUp={handleOnChange}
             placeholder="Enter Tags"
             className="block w-full sm:w-3/4 md:w-1/2  py-2  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm"
           />
-          <div className=" w-full   sm:w-3/4 md:w-1/2  py-1  bg-white  outline-gray-400 border-gray-200 border-2 my-2 sm:px-3 rounded-lg text-lg shadow-sm">
-            <InputTag title="Moon" />
-            <InputTag title="Moon" />
-            <InputTag title="Moon" />
-          </div>
-          {errors.tags && (
-            <span className="m_0  text-red-500 ">{errors?.tags.message}</span>
+          {tags.length > 0 && (
+            <div className=" w-full   sm:w-3/4 md:w-1/2  py-1  bg-white  outline-gray-400 border-gray-200 border-2 my-2 sm:px-3 rounded-lg text-lg shadow-sm">
+              {tags.map((tag, index) => (
+                <InputTag title={tag} key={index} onRemove={handleRemoveTag} />
+              ))}
+            </div>
           )}
+
           <div className="block w-full sm:w-3/4 md:w-1/2  py-2 relative bg-white  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm">
             <input
               {...register('image', { required: true })}
