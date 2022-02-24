@@ -17,7 +17,6 @@ export const Sidebar = ({ showSidebar, setShowSidebar }: Props) => {
       } flex justify-center items-center ease-in-out duration-500 transition-all `}
     >
       <ul className="space-y-8 text-black w-full px-4">
-        <button onClick={() => setShowSidebar(!showSidebar)}>Toggle</button>
         <Link
           to={'/create'}
           onClick={() => setShowSidebar(false)}

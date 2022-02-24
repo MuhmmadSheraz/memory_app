@@ -41,15 +41,24 @@ const getMemory = async (id: string) => {
     },
   })
 }
-const createMemory = async (body: CreateMemoryBody) => {
-  return await Instance({
-    method: 'POST',
-    url: `/api/create-memory`,
-    withCredentials: true,
+const createMemory = async (body: any) => {
+  return await Instance.post('http://127.0.0.1:3001/api/create-memory', body, {
     headers: {
       authorization: `Bearer ${authCred?.token}`,
+      'Content-Type': 'multipart/form-data',
     },
-    data: body,
   })
+  // return await Instance({
+  //   method: 'POST',
+  //   url: `/api/create-memory`,
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //     authorization: `Bearer ${authCred?.token}`,
+  //   },
+  //   withCredentials: true,
+  //   data: {
+  //     body,
+  //   },
+  // })
 }
 export { onSignUp, onSignIn, getMemories, getMemory, createMemory }

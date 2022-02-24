@@ -15,13 +15,13 @@ import { AxiosError } from 'axios'
 type Inputs = {
   title: string
   description: string
-  image: string
+  memImage: string
 }
 const schema = yup
   .object({
     title: yup.string().required(),
     description: yup.string().required(),
-    image: yup.string().required(),
+    memImage: yup.mixed().required(),
   })
   .required()
 const CreateMemory = () => {
@@ -37,8 +37,9 @@ const CreateMemory = () => {
   })
   const [tags, setTags] = useState<string[]>([])
   const mutation = useMutation(
-    async (body: CreateMemoryBody) => {
-      return await createMemory(body)
+    async (formData: FormData | any) => {
+      console.log('api', { formData })
+      return await createMemory(formData)
     },
     {
       onSuccess: () => {
@@ -70,16 +71,17 @@ const CreateMemory = () => {
     }
   )
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data)
-    const body = {
-      tags: tags,
-      userId: authCreds?.user._id,
-      title: data?.title,
-      description: data?.description,
-      image:
-        'https://images.unsplash.com/photo-1644729696782-e4035bcedf75?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60',
-    }
-    mutation.mutateAsync(body)
+    // @ts-ignore
+    console.log(data.memImage[0].name)
+
+    const formData = new FormData()
+    formData.append('image', data.memImage[0])
+    formData.append('userId', authCreds?.user._id)
+    formData.append('title', data?.title)
+    formData.append('description', data?.description)
+    formData.append('tags', JSON.stringify(tags))
+    console.log({ formData })
+    mutation.mutateAsync(formData)
   }
 
   const handleOnChange = (e: React.KeyboardEvent | any) => {
@@ -103,6 +105,7 @@ const CreateMemory = () => {
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full flex justify-center items-center flex-col"
+          encType="multipart/form-data"
         >
           <input
             {...register('title', { required: true })}
@@ -138,9 +141,8 @@ const CreateMemory = () => {
 
           <div className="block w-full sm:w-3/4 md:w-1/2  py-2 relative bg-white  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm">
             <input
-              {...register('image', { required: true })}
+              {...register('memImage', { required: true })}
               type={'file'}
-              placeholder="Enter Title"
               className="block w-full "
             />
 
@@ -149,8 +151,10 @@ const CreateMemory = () => {
               src="https://cdn.dribbble.com/users/443570/screenshots/5276693/therapist.jpg?compress=1&resize=800x600&vertical=top"
             />
           </div>
-          {errors.image && (
-            <span className="m_0  text-red-500 ">{errors?.image.message}</span>
+          {errors.memImage && (
+            <span className="m_0  text-red-500 ">
+              {errors?.memImage.message}
+            </span>
           )}
 
           <button

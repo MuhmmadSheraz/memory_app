@@ -39,6 +39,7 @@ const Home = () => {
       </div>
     )
   }
+  console.log(data?.data.data)
 
   return (
     <>

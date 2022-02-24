@@ -9,4 +9,5 @@ const Instance = axios.create({
   },
   withCredentials: true,
 })
+
 export default Instance

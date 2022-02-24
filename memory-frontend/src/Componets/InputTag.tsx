@@ -8,7 +8,7 @@ export const InputTag = ({ title, onRemove }: Props) => {
       {title}
       <span
         onClick={() => onRemove && onRemove(title)}
-        className="text-white z-10 block bg-red-500 text-center  h-5 w-5 ml-1 sm:ml-4 p-1 pt-[2px] rounded-full"
+        className="text-white z-10 block bg-red-500 text-center cursor-pointer  h-5 w-5 ml-1 sm:ml-4 p-1 pt-[2px] rounded-full"
       >
         x
       </span>
