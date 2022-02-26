@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { TailSpin } from 'react-loader-spinner'
 import { AxiosError } from 'axios'
 import { SignUpUser } from '../Types/Auth'
+import { useNavigate } from 'react-router-dom'
 
 type Inputs = {
   email: string
@@ -26,6 +27,8 @@ const schema = yup
   .required()
 
 const SignUp = () => {
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -41,7 +44,8 @@ const SignUp = () => {
     },
     {
       onSuccess: (data) => {
-        localStorage.setItem('user_Session', JSON.stringify(data.data.token))
+        localStorage.setItem('user_Session', JSON.stringify(data.data.user))
+        navigate('/')
         toast('🦄 Signed Up', {
           position: 'top-right',
           autoClose: 3000,
