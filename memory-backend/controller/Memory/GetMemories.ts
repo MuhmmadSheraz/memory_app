@@ -1,10 +1,10 @@
-import { memories } from './../../model/memory';
-import  { Request, Response } from 'express';
+import { memories } from './../../model/memory'
+import { Request, Response } from 'express'
 export const getAllMemories = async (req: Request, res: Response) => {
-  let data: any;
+  let data: any
   try {
     // finds all the docs.
-    data = await memories.find();
+    data = await memories.find({ isPublic: { $ne: false } })
 
     // Filter Methods
 
@@ -66,16 +66,16 @@ export const getAllMemories = async (req: Request, res: Response) => {
     //   }
     //   data = await memories.find().skip(skipPage).limit(1);
     // }
-    console.log(req.query.tags);
+    console.log(req.query.tags)
     res.send({
       status: 'success',
       length: data?.length,
-      data
-    });
+      data,
+    })
   } catch (error: any) {
     res.send({
       status: 500,
-      message: error?.message
-    });
+      message: error?.message,
+    })
   }
-};
+}

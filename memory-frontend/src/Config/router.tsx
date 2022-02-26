@@ -7,6 +7,7 @@ import {
 import CreateMemory from '../Views/CreateMemory'
 import Home from '../Views/Home'
 import MemoryDetail from '../Views/MemoryDetail'
+import PrivateMemories from '../Views/PrivateMemories'
 import Login from '../Views/SignIn'
 import SignUp from '../Views/SignUp'
 
@@ -27,10 +28,18 @@ export default function MainRouter() {
           }
         />
         <Route
-          path="/:id"
+          path="/memory/:id"
           element={
             <ProtectedRoute>
               <MemoryDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/private"
+          element={
+            <ProtectedRoute>
+              <PrivateMemories />
             </ProtectedRoute>
           }
         />

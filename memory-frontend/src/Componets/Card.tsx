@@ -9,8 +9,7 @@ interface Props {
 export const Card = ({ data }: Props) => {
   const navigate = useNavigate()
   const handleShowDetail = () => {
-    console.log(data)
-    navigate(`/${data?._id}`)
+    navigate(`/memory/${data?._id}`)
   }
   const handleLike = (e: any) => {
     e.stopPropagation() // stops overriding show detail click
