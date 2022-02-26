@@ -8,7 +8,6 @@ import { createMemory } from '../Services/API/api'
 import useSession from '../Helper/useSession'
 import { TailSpin } from 'react-loader-spinner'
 import { useNavigate } from 'react-router-dom'
-import { CreateMemoryBody } from '../Types/Memory'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 
@@ -16,12 +15,20 @@ type Inputs = {
   title: string
   description: string
   memImage: string
+  isPublic: boolean
 }
 const schema = yup
   .object({
     title: yup.string().required(),
     description: yup.string().required(),
-    memImage: yup.mixed().required(),
+    memImage: yup
+      .mixed()
+      .required()
+      .test('fileSize', 'Please provide image', (value) => {
+        if (!value.length) return false
+        return value[0].size <= 2000000
+      }),
+    isPublic: yup.boolean(),
   })
   .required()
 const CreateMemory = () => {
@@ -38,7 +45,6 @@ const CreateMemory = () => {
   const [tags, setTags] = useState<string[]>([])
   const mutation = useMutation(
     async (formData: FormData | any) => {
-      console.log('api', { formData })
       return await createMemory(formData)
     },
     {
@@ -71,16 +77,13 @@ const CreateMemory = () => {
     }
   )
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    // @ts-ignore
-    console.log(data.memImage[0].name)
-
     const formData = new FormData()
-    formData.append('image', data.memImage[0])
+    formData.append('image', data?.memImage[0])
     formData.append('userId', authCreds?.user._id)
     formData.append('title', data?.title)
     formData.append('description', data?.description)
     formData.append('tags', JSON.stringify(tags))
-    console.log({ formData })
+    formData.append('isPublic', JSON.stringify(data?.isPublic))
     mutation.mutateAsync(formData)
   }
 
@@ -92,7 +95,6 @@ const CreateMemory = () => {
     }
   }
   const handleRemoveTag = (tagName: string) => {
-    console.log('removed')
     const newTags = tags.filter((tag) => tag !== tagName)
     setTags(newTags)
   }
@@ -142,8 +144,9 @@ const CreateMemory = () => {
           <div className="block w-full sm:w-3/4 md:w-1/2  py-2 relative bg-white  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm">
             <input
               {...register('memImage', { required: true })}
-              type={'file'}
-              className="block w-full "
+              type="file"
+              accept="image/x-png,image/jpeg,image/jpg"
+              className="block w-full"
             />
 
             <img
@@ -157,10 +160,22 @@ const CreateMemory = () => {
             </span>
           )}
 
+          <div className="w-1/2 my-3 ml-2 flex items-center">
+            <input
+              {...register('isPublic')}
+              className="items-start form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-green-600 checked:border-green-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+              type="checkbox"
+              value=""
+              id="flexCheckDefault"
+            />
+            <label className="form-check-label inline-block text-gray-800 text-lg">
+              Public Memory
+            </label>
+          </div>
           <button
             disabled={mutation.isLoading}
             type="submit"
-            className="cursor-pointer flex justify-center items-center w-[33%] sm:w-[20%] md:w-[16%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm"
+            className="cursor-pointer flex justify-center items-center w-[65%] sm:w-[50%] md:w-[20%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm"
           >
             {mutation.isLoading ? (
               <>
