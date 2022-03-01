@@ -1,4 +1,4 @@
-import { CreateMemoryBody } from './../../Types/Memory'
+import { CreateMemoryBody, LikeMemoryBody } from './../../Types/Memory'
 import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
 const authCred = JSON.parse(localStorage.getItem('user_Session')!)
@@ -60,6 +60,17 @@ const createMemory = async (body: any) => {
     },
   })
 }
+const likeMemory = async ({ memoryId, userId }: LikeMemoryBody) => {
+  return await Instance({
+    method: 'POST',
+    url: `/api/like-memory`,
+    withCredentials: true,
+    data: { memoryId, userId },
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
 export {
   onSignUp,
   onSignIn,
@@ -67,4 +78,5 @@ export {
   getMemory,
   createMemory,
   getAllPrivateMemories,
+  likeMemory,
 }

@@ -3,16 +3,42 @@ import { FaComment } from 'react-icons/fa'
 import dayjs from 'dayjs'
 import { Memory } from '../Types/Memory'
 import { useNavigate } from 'react-router-dom'
+import useSession from '../Helper/useSession'
+import { likeMemory } from '../Services/API/api'
+import { AxiosError } from 'axios'
+import { useEffect, useState } from 'react'
 interface Props {
   data: Memory
 }
 export const Card = ({ data }: Props) => {
+  const { user } = useSession('user_Session', null)
+  const [isLiked, setIsLiked] = useState<boolean>(false)
+
+  useEffect(() => {
+    data?.likes.find((like: string) =>
+      like == user?._id ? setIsLiked(true) : null
+    )
+  }, [data])
+
   const navigate = useNavigate()
   const handleShowDetail = () => {
     navigate(`/memory/${data?._id}`)
   }
-  const handleLike = (e: any) => {
+  const handleLike = async (e: any) => {
     e.stopPropagation() // stops overriding show detail click
+    const body = {
+      memoryId: data?._id,
+      userId: user?._id,
+    }
+    console.log({ body })
+    try {
+      const response = await likeMemory(body)
+      console.log(response)
+      setIsLiked(true)
+    } catch (error) {
+      const err = error as AxiosError
+      console.log(err.message)
+    }
   }
   return (
     <div
@@ -40,7 +66,9 @@ export const Card = ({ data }: Props) => {
           <BsHeartFill
             onClick={handleLike}
             size={18}
-            className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
+            className={`text-gray-300 ${
+              isLiked && 'text-red-500'
+            }  hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
           />
           <FaComment
             size={18}

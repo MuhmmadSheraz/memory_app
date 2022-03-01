@@ -1,3 +1,4 @@
+import { likeMemory } from './../controller/Memory/LikeMemory'
 import { getAllPrivateMemories } from './../controller/Memory/GetPrivateMemories'
 import { protect } from './../controller/Authentication/auth'
 import { Router } from 'express'
@@ -14,5 +15,6 @@ memoryRoutes.get(`/memories/:id`, protect, getMemory)
 memoryRoutes.get(`/memories-by-tag`, getMemoryByTag)
 memoryRoutes.patch(`/update-memory/:id`, updateMemory)
 memoryRoutes.post(`/create-memory`, protect, createMemory)
+memoryRoutes.post(`/like-memory`, protect, likeMemory)
 memoryRoutes.delete(`/delete-memory/:id`, deleteMemory)
 export default memoryRoutes

@@ -13,3 +13,7 @@ export type CreateMemoryBody = {
   image: string
   userId: string
 }
+export type LikeMemoryBody = {
+  memoryId: string
+  userId: string
+}
