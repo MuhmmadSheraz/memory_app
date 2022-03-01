@@ -5,7 +5,8 @@ export const likeMemory = async (req: Request, res: Response) => {
 
   try {
     const data = await memories.findByIdAndUpdate(body.memoryId, {
-      $push: {
+      new: true,
+      $addToSet: {
         likes: body?.userId,
       },
     })
