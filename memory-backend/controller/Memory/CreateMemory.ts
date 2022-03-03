@@ -1,22 +1,23 @@
 import { memories } from './../../model/memory'
-import { Response } from 'express'
+import { Response, Request } from 'express'
 import cloudinary from 'cloudinary'
-export const createMemory = async (req: any, res: Response) => {
+export const createMemory = async (req: Request, res: Response) => {
   cloudinary.v2.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API,
     api_secret: process.env.CLOUD_API_SECRET,
   })
-  const { body }: any = req
+  const { body, headers } = req
 
   const file = req?.files?.image
   try {
-    const authToken = req?.headers?.authorization?.split(' ')[1] || ''
-    let memBody = { ...body }
-    memBody.tags = JSON.parse(body.tags)
+    const authToken = headers?.authorization?.split(' ')[1] || ''
+    let memBody: any = { ...body }
+    memBody.tags = JSON.parse(body?.tags)
     memBody.userId = authToken
     await cloudinary.v2.uploader?.upload(
-      file.tempFilePath,
+      // @ts-ignore
+      file?.tempFilePath,
       {
         folder: 'memories',
       },

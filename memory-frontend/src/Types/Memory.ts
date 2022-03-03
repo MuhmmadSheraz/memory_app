@@ -15,5 +15,4 @@ export type CreateMemoryBody = {
 }
 export type LikeMemoryBody = {
   memoryId: string
-  userId: string
 }

@@ -60,12 +60,12 @@ const createMemory = async (body: any) => {
     },
   })
 }
-const likeMemory = async ({ memoryId, userId }: LikeMemoryBody) => {
+const likeMemory = async ({ memoryId }: LikeMemoryBody) => {
   return await Instance({
     method: 'POST',
     url: `/api/like-memory`,
     withCredentials: true,
-    data: { memoryId, userId },
+    data: { memoryId },
     headers: {
       authorization: `Bearer ${authCred?.token}`,
     },

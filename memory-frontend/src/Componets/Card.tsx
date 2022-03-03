@@ -28,13 +28,12 @@ export const Card = ({ data }: Props) => {
     e.stopPropagation() // stops overriding show detail click
     const body = {
       memoryId: data?._id,
-      userId: user?._id,
     }
     console.log({ body })
     try {
       const response = await likeMemory(body)
-      console.log(response)
-      setIsLiked(true)
+
+      response?.data && setIsLiked(true)
     } catch (error) {
       const err = error as AxiosError
       console.log(err.message)
