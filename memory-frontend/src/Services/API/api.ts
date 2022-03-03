@@ -71,6 +71,18 @@ const likeMemory = async ({ memoryId }: LikeMemoryBody) => {
     },
   })
 }
+const unLikeMemory = async ({ memoryId }: LikeMemoryBody) => {
+  console.log('api called')
+  return await Instance({
+    method: 'POST',
+    url: `/api/un-like-memory`,
+    withCredentials: true,
+    data: { memoryId },
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
 const searchMemory = async (searchText: string) => {
   return await Instance({
     method: 'GET',
@@ -90,5 +102,6 @@ export {
   createMemory,
   getAllPrivateMemories,
   likeMemory,
+  unLikeMemory,
   searchMemory,
 }

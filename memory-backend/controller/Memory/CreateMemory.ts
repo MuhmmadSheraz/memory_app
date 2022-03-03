@@ -1,3 +1,4 @@
+import { tokenDecoder } from './../../helper/tokenDecoder'
 import { memories } from './../../model/memory'
 import { Response, Request } from 'express'
 import cloudinary from 'cloudinary'
@@ -12,9 +13,11 @@ export const createMemory = async (req: Request, res: Response) => {
   const file = req?.files?.image
   try {
     const authToken = headers?.authorization?.split(' ')[1] || ''
+    const { id } = tokenDecoder(authToken)
+
     let memBody: any = { ...body }
     memBody.tags = JSON.parse(body?.tags)
-    memBody.userId = authToken
+    memBody.userId = id
     await cloudinary.v2.uploader?.upload(
       // @ts-ignore
       file?.tempFilePath,

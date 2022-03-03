@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { Memory } from '../Types/Memory'
 import { useNavigate } from 'react-router-dom'
 import useSession from '../Helper/useSession'
-import { likeMemory } from '../Services/API/api'
+import { likeMemory, unLikeMemory } from '../Services/API/api'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 interface Props {
@@ -24,16 +24,20 @@ export const Card = ({ data }: Props) => {
   const handleShowDetail = () => {
     navigate(`/memory/${data?._id}`)
   }
-  const handleLike = async (e: any) => {
+  const handleLikeAction = async (e: any) => {
     e.stopPropagation() // stops overriding show detail click
     const body = {
       memoryId: data?._id,
     }
     console.log({ body })
     try {
-      const response = await likeMemory(body)
-
-      response?.data && setIsLiked(true)
+      if (data?.likes.includes(user?._id)) {
+        const response = await unLikeMemory(body)
+        response?.data && setIsLiked(false)
+      } else {
+        const response = await likeMemory(body)
+        response?.data && setIsLiked(true)
+      }
     } catch (error) {
       const err = error as AxiosError
       console.log(err.message)
@@ -63,7 +67,7 @@ export const Card = ({ data }: Props) => {
       <div className="my-3 mx-2 flex items-center justify-between">
         <div className="flex space-x-3 items-center">
           <BsHeartFill
-            onClick={handleLike}
+            onClick={handleLikeAction}
             size={18}
             className={`text-gray-300 ${
               isLiked && 'text-red-500'
