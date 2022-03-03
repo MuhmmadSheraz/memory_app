@@ -71,6 +71,17 @@ const likeMemory = async ({ memoryId, userId }: LikeMemoryBody) => {
     },
   })
 }
+const searchMemory = async (searchText: string) => {
+  return await Instance({
+    method: 'GET',
+    params: { searchText },
+    url: `/api/search-memories`,
+    withCredentials: true,
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
 export {
   onSignUp,
   onSignIn,
@@ -79,4 +90,5 @@ export {
   createMemory,
   getAllPrivateMemories,
   likeMemory,
+  searchMemory,
 }

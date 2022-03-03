@@ -79,7 +79,6 @@ const CreateMemory = () => {
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const formData = new FormData()
     formData.append('image', data?.memImage[0])
-    formData.append('userId', authCreds?.user._id)
     formData.append('title', data?.title)
     formData.append('description', data?.description)
     formData.append('tags', JSON.stringify(tags))

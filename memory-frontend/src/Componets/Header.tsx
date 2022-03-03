@@ -1,11 +1,25 @@
+import { AxiosError } from 'axios'
+import { useState } from 'react'
 import { BiMenu, BiSearch } from 'react-icons/bi'
 import { CgClose } from 'react-icons/cg'
 import { Link } from 'react-router-dom'
+import { searchMemory } from '../Services/API/api'
 interface Props {
   showSidebar: boolean
   setShowSidebar: (e: boolean) => void
 }
 export const Header = ({ showSidebar, setShowSidebar }: Props) => {
+  const [searchText, setSearchText] = useState<string>('')
+
+  const handleSearchMemory = async (val: string) => {
+    try {
+      const response = await searchMemory(val)
+      console.log({ response })
+    } catch (error) {
+      const err = error as AxiosError
+      console.log(err.message)
+    }
+  }
   return (
     <div
       className={`z-20 flex justify-between items-center bg-white px-8 p-3 max-h-[20%] shadow-md fixed top-0 w-full    `}
@@ -35,6 +49,11 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
         <input
           type="text"
           name="search-box"
+          onChange={(e) => {
+            setSearchText(e.target.value)
+            handleSearchMemory(e.target.value)
+          }}
+          value={searchText}
           placeholder="Search Memories..."
           className=" px-4  py-2 rounded-lg w-full outline-gray-400 text-lg bg-blue-50 placeholder:text-gray-500"
         ></input>

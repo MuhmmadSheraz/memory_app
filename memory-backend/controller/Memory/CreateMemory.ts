@@ -11,8 +11,10 @@ export const createMemory = async (req: any, res: Response) => {
 
   const file = req?.files?.image
   try {
+    const authToken = req?.headers?.authorization?.split(' ')[1] || ''
     let memBody = { ...body }
     memBody.tags = JSON.parse(body.tags)
+    memBody.userId = authToken
     await cloudinary.v2.uploader?.upload(
       file.tempFilePath,
       {

@@ -1,9 +1,12 @@
 import { memories } from './../../model/memory'
 import { Request, Response } from 'express'
-export const getMemory = async (req: Request, res: Response) => {
-  const { params } = req
+export const searchMemory = async (req: Request, res: Response) => {
+  const query = {
+    $search: 'Pop',
+  }
+
   try {
-    const data = await memories.findById(params?.id)
+    const data = await memories.find(query)
     res.send({
       status: 200,
       data,
