@@ -1,12 +1,12 @@
 import { memories } from './../../model/memory'
 import { Request, Response } from 'express'
 export const searchMemory = async (req: Request, res: Response) => {
-  const query = {
-    $search: 'Pop',
-  }
-
   try {
-    const data = await memories.find(query)
+    const searchTerm: any = req?.query?.searchText || ''
+    const data = await memories.find({
+      $text: { $search: searchTerm },
+    })
+
     res.send({
       status: 200,
       data,

@@ -42,4 +42,8 @@ const memorySchema: Schema = new Schema({
 //   this.find({ isPublic: { $ne: false } });
 //   next();
 // });
+
+// Indexing for searching
+memorySchema.index({ title: 1 })
+
 export const memories = mongoose.model('Memories', memorySchema)
