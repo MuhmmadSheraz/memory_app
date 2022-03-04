@@ -12,7 +12,7 @@ const PrivateMemories = () => {
   const getAllMemories = () => {
     return getAllPrivateMemories()
   }
-  const { data, isError, isLoading, error } = useQuery(
+  const { data, isError, isLoading, error, refetch } = useQuery(
     'allMemories',
     getAllMemories,
     {
@@ -39,14 +39,13 @@ const PrivateMemories = () => {
       </div>
     )
   }
-  console.log(data?.data.data)
 
   return (
     <>
       <div className="min-h-screen bg-gray-100 pt-20 w-[100vw]">
         <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-2 px-2 ">
           {data?.data?.data?.map((memory: Memory) => (
-            <Card key={memory._id} data={memory} />
+            <Card handleRefetch={refetch} key={memory._id} data={memory} />
           ))}
           {!data?.data?.data?.length && (
             <h2 className="text-center w-[98vw] flex justify-center items-center font-semibold text-2xl h-[85vh]">

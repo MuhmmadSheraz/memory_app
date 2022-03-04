@@ -72,7 +72,6 @@ const likeMemory = async ({ memoryId }: LikeMemoryBody) => {
   })
 }
 const unLikeMemory = async ({ memoryId }: LikeMemoryBody) => {
-  console.log('api called')
   return await Instance({
     method: 'POST',
     url: `/api/un-like-memory`,

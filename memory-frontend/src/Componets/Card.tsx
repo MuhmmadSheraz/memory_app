@@ -9,8 +9,9 @@ import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 interface Props {
   data: Memory
+  handleRefetch: () => void
 }
-export const Card = ({ data }: Props) => {
+export const Card = ({ data, handleRefetch }: Props) => {
   const { user } = useSession('user_Session', null)
   const [isLiked, setIsLiked] = useState<boolean>(false)
 
@@ -18,25 +19,26 @@ export const Card = ({ data }: Props) => {
     data?.likes.find((like: string) =>
       like == user?._id ? setIsLiked(true) : null
     )
-  }, [data])
+  }, [])
 
   const navigate = useNavigate()
   const handleShowDetail = () => {
     navigate(`/memory/${data?._id}`)
   }
   const handleLikeAction = async (e: any) => {
-    e.stopPropagation() // stops overriding show detail click
+    e.stopPropagation()
     const body = {
       memoryId: data?._id,
     }
-    console.log({ body })
     try {
       if (data?.likes.includes(user?._id)) {
         const response = await unLikeMemory(body)
         response?.data && setIsLiked(false)
+        handleRefetch()
       } else {
         const response = await likeMemory(body)
         response?.data && setIsLiked(true)
+        handleRefetch()
       }
     } catch (error) {
       const err = error as AxiosError
@@ -68,7 +70,7 @@ export const Card = ({ data }: Props) => {
         <div className="flex space-x-3 items-center">
           <BsHeartFill
             onClick={handleLikeAction}
-            size={18}
+            size={24}
             className={`text-gray-300 ${
               isLiked && 'text-red-500'
             }  hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
