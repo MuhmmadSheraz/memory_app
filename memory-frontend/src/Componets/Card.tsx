@@ -62,7 +62,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
             <h3 className="text-gray-500">Karachi,Pakistan</h3>
           </div>
         </div>
-        <BsThreeDots size={24} className="text-gray-500" />
+        <BsThreeDots size={20} className="text-gray-500" />
       </div>
       {/* Image */}
       <img className="h-48 w-full rounded-3xl" src={data?.image} />
@@ -70,19 +70,19 @@ export const Card = ({ data, handleRefetch }: Props) => {
         <div className="flex space-x-3 items-center">
           <BsHeartFill
             onClick={handleLikeAction}
-            size={24}
+            size={20}
             className={`text-gray-300 ${
               isLiked && 'text-red-500'
             }  hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
           />
           <FaComment
-            size={18}
+            size={20}
             className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
           />
         </div>
         <BsFillBookmarkFill
-          size={18}
-          className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
+          size={20}
+          className="text-gray-300 hover:text-black hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
         />
       </div>
       <div className="mx-2 my-3 text-sm lg:text-base">

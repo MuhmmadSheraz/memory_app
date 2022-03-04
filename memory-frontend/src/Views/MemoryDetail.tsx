@@ -1,4 +1,6 @@
+import { AxiosError } from 'axios'
 import dayjs from 'dayjs'
+import { useEffect, useState } from 'react'
 import {
   BsFillBookmarkFill,
   BsHeartFill,
@@ -8,12 +10,20 @@ import { TailSpin } from 'react-loader-spinner'
 import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { InputTag } from '../Componets/InputTag'
-import { getMemory } from '../Services/API/api'
+import useSession from '../Helper/useSession'
+import { getMemory, likeMemory, unLikeMemory } from '../Services/API/api'
 
 const MemoryDetail = () => {
   const navigate = useNavigate()
   let { id } = useParams()
-  const { data, isLoading } = useQuery(['memories', id], () => {
+  const [isLiked, setIsLiked] = useState<boolean>(false)
+  const { user } = useSession('user_Session', null)
+  useEffect(() => {
+    data?.data?.data?.likes.find((like: string) =>
+      like == user?._id ? setIsLiked(true) : null
+    )
+  }, [])
+  const { data, isLoading, refetch } = useQuery(['memories', id], () => {
     return getMemory(id ? id : '')
   })
   if (isLoading) {
@@ -22,6 +32,26 @@ const MemoryDetail = () => {
         <TailSpin height="30" width="30" color="green" ariaLabel="loading" />
       </div>
     )
+  }
+  const handleLikeAction = async (e: any) => {
+    e.stopPropagation()
+    const body = {
+      memoryId: data?.data?.data?._id,
+    }
+    try {
+      if (data?.data?.data?.likes.includes(user?._id)) {
+        const response = await unLikeMemory(body)
+        response?.data && setIsLiked(false)
+        refetch()
+      } else {
+        const response = await likeMemory(body)
+        response?.data && setIsLiked(true)
+        refetch()
+      }
+    } catch (error) {
+      const err = error as AxiosError
+      console.log(err.message)
+    }
   }
   return (
     <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2">
@@ -55,7 +85,10 @@ const MemoryDetail = () => {
           <div className="flex space-x-4 items-center">
             <BsHeartFill
               size={24}
-              className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
+              onClick={handleLikeAction}
+              className={`text-gray-300 ${
+                isLiked && 'text-red-500'
+              }  hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
             />
             <div className="mx-2 my-3 text-sm lg:text-base">
               <p>
