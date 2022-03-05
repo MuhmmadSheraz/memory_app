@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import AuthInput from '../Componets/AuthInput'
 import { useEffect, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useMutation } from 'react-query'
 import { SignInUser } from '../Types/Auth'
@@ -123,6 +123,9 @@ const Login = () => {
           )}
         </button>
       </form>
+      <p className="mt-4 text-green-800 text-xl">
+        Don't have an account ? <Link to={'/signup'}>Register Here</Link>
+      </p>
     </div>
   )
 }

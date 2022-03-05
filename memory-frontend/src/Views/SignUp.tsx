@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { TailSpin } from 'react-loader-spinner'
 import { AxiosError } from 'axios'
 import { SignUpUser } from '../Types/Auth'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 type Inputs = {
   email: string
@@ -149,6 +149,9 @@ const SignUp = () => {
           )}
         </button>
       </form>
+      <p className="mt-4 text-green-800 text-xl">
+        Already have an account ? <Link to={'/login'}>Login Here</Link>
+      </p>
     </div>
   )
 }
