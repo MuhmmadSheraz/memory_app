@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { AxiosError } from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BiMenu, BiSearch } from 'react-icons/bi'
 import { CgClose } from 'react-icons/cg'
 import { Link } from 'react-router-dom'
@@ -12,7 +12,21 @@ interface Props {
 }
 export const Header = ({ showSidebar, setShowSidebar }: Props) => {
   const [searchText, setSearchText] = useState<string>('')
+  const [searhSuggestions, setSearchSuggestion] = useState<boolean>(false)
 
+  const ref = useRef<any>(null)
+  // Outside Click Detection
+  useEffect(() => {
+    const checkIfClickedOutside = (e: React.MouseEvent | any) => {
+      if (searhSuggestions && ref.current && !ref.current.contains(e.target)) {
+        setSearchSuggestion(false)
+      }
+    }
+    document.addEventListener('mousedown', checkIfClickedOutside)
+    return () => {
+      document.removeEventListener('mousedown', checkIfClickedOutside)
+    }
+  }, [searhSuggestions])
   useEffect(() => {
     return () => setSearchText('')
   }, [])
@@ -27,7 +41,6 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
       retryOnMount: false,
     }
   )
-  console.log({ data })
   return (
     <div
       className={`z-20 flex justify-between items-center bg-white px-8 p-3 max-h-[20%] shadow-md fixed top-0 w-full    `}
@@ -53,7 +66,10 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
           Memory App
         </Link>
       </div>
-      <div className=" hidden sm:w-[50%] lg:w-[30%] md:flex justify-center items-center relative ">
+      <div
+        ref={ref}
+        className=" hidden sm:w-[50%] lg:w-[30%] md:flex justify-center items-center relative "
+      >
         <input
           type="text"
           name="search-box"
@@ -61,12 +77,17 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
             setSearchText(e.target.value)
             e.target.value !== '' && refetch()
           }}
+          onClick={() => setSearchSuggestion(true)}
           value={searchText}
           placeholder="Search Memories..."
           className=" px-4 peer  py-2 rounded-lg w-full outline-gray-400 text-lg bg-blue-50 placeholder:text-gray-500"
         />
         <BiSearch size={30} className="text-gray-500 right-2 absolute" />
-        <div className="peer-focus:block hidden absolute top-10 w-full mt-1 bg-white z-20    rounded-md outline-gray-400 text-lg border-2 border-t-0 border-gray-200  shadow-lg ">
+        <div
+          className={` ${
+            searhSuggestions ? 'block' : 'hidden'
+          } absolute top-10 w-full mt-1 bg-white z-20    rounded-md outline-gray-400 text-lg border-2 border-t-0 border-gray-200  shadow-lg `}
+        >
           {searchText == '' && (
             <p className="text-center py-2">Type Something</p>
           )}
@@ -82,6 +103,7 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
           )}
           {data?.data?.data?.map((mem: any) => (
             <Link
+              onClick={() => setSearchSuggestion(false)}
               to={`/memory/${mem?._id}`}
               className="hover:bg-blue-200 text-lg w-full px-2  block py-2 cursor-pointer my-1"
             >
