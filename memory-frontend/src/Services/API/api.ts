@@ -93,6 +93,17 @@ const searchMemory = async (searchText: string) => {
     },
   })
 }
+const addBookmark = async ({ memoryId }: LikeMemoryBody) => {
+  return await Instance({
+    method: 'POST',
+    url: `/api/addbookmark-memory`,
+    withCredentials: true,
+    data: { memoryId },
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
 export {
   onSignUp,
   onSignIn,
@@ -103,4 +114,5 @@ export {
   likeMemory,
   unLikeMemory,
   searchMemory,
+  addBookmark,
 }

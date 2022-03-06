@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { Memory } from '../Types/Memory'
 import { useNavigate } from 'react-router-dom'
 import useSession from '../Helper/useSession'
-import { likeMemory, unLikeMemory } from '../Services/API/api'
+import { addBookmark, likeMemory, unLikeMemory } from '../Services/API/api'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 interface Props {
@@ -12,12 +12,16 @@ interface Props {
   handleRefetch: () => void
 }
 export const Card = ({ data, handleRefetch }: Props) => {
-  const { user } = useSession('user_Session', null)
+  const { user, token } = useSession('user_Session', null)
   const [isLiked, setIsLiked] = useState<boolean>(false)
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
     data?.likes.find((like: string) =>
       like == user?._id ? setIsLiked(true) : null
+    )
+    user?.myBookmarks.find((bookmark: string) =>
+      bookmark == data?._id ? setIsBookmarked(true) : null
     )
   }, [])
 
@@ -33,11 +37,35 @@ export const Card = ({ data, handleRefetch }: Props) => {
     try {
       if (data?.likes.includes(user?._id)) {
         const response = await unLikeMemory(body)
-        response?.data && setIsLiked(false)
+        response?.status >= 200 && setIsLiked(false)
         handleRefetch()
       } else {
         const response = await likeMemory(body)
-        response?.data && setIsLiked(true)
+        response?.status >= 200 && setIsLiked(true)
+        handleRefetch()
+      }
+    } catch (error) {
+      const err = error as AxiosError
+      console.log(err.message)
+    }
+  }
+  const handleBookmark = async (e: any) => {
+    e.stopPropagation()
+    const body = {
+      memoryId: data?._id,
+    }
+    try {
+      if (user?.myBookmarks.includes(data?._id)) {
+        // const response = await unLikeMemory(body)
+        // response?.status >= 200 && setIsLiked(false)
+        // handleRefetch()
+      } else {
+        const response = await addBookmark(body)
+        response?.status >= 200 && setIsBookmarked(true)
+        const userCopy = { user, token }
+        userCopy.user.myBookmarks.push(data?._id)
+        localStorage.setItem('user_Session', JSON.stringify(userCopy))
+
         handleRefetch()
       }
     } catch (error) {
@@ -81,8 +109,11 @@ export const Card = ({ data, handleRefetch }: Props) => {
           />
         </div>
         <BsFillBookmarkFill
+          onClick={handleBookmark}
           size={20}
-          className="text-gray-300 hover:text-black hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
+          className={`
+          ${isBookmarked ? 'text-black' : ''}
+          text-gray-300 hover:text-black hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
         />
       </div>
       <div className="mx-2 my-3 text-sm lg:text-base">
