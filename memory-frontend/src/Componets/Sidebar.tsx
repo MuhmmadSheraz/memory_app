@@ -8,7 +8,7 @@ export const Sidebar = ({ showSidebar, setShowSidebar }: Props) => {
   const navigate = useNavigate()
   const handleSignout = () => {
     localStorage.removeItem('user_Session')
-    navigate('/')
+    navigate('/login')
   }
   return (
     <div

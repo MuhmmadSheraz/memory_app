@@ -30,11 +30,14 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
   useEffect(() => {
     return () => setSearchText('')
   }, [])
+  const handleSearchMemory = (text: string) => {
+    return searchMemory(text)
+  }
   const { data, isLoading, refetch } = useQuery(
     ['search-memories', searchText],
 
     () => {
-      return searchMemory(searchText ? searchText : '')
+      return handleSearchMemory(searchText)
     },
     {
       refetchOnWindowFocus: false,

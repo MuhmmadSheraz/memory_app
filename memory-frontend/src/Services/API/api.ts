@@ -1,7 +1,7 @@
 import { CreateMemoryBody, LikeMemoryBody } from './../../Types/Memory'
 import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
-const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
 // Authentication
 const onSignUp = async (body: SignUpUser) => {
   return await Instance({
@@ -43,6 +43,9 @@ const getAllPrivateMemories = async () => {
   })
 }
 const getMemory = async (id: string) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+  console.log('called', authCred)
+  console.log(authCred.token)
   return await Instance({
     method: 'GET',
     url: `/api/memories/${id}`,
@@ -53,6 +56,7 @@ const getMemory = async (id: string) => {
   })
 }
 const createMemory = async (body: any) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
   return await Instance.post('http://127.0.0.1:3001/api/create-memory', body, {
     headers: {
       authorization: `Bearer ${authCred?.token}`,
@@ -61,6 +65,8 @@ const createMemory = async (body: any) => {
   })
 }
 const likeMemory = async ({ memoryId }: LikeMemoryBody) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
   return await Instance({
     method: 'POST',
     url: `/api/like-memory`,
@@ -72,6 +78,8 @@ const likeMemory = async ({ memoryId }: LikeMemoryBody) => {
   })
 }
 const unLikeMemory = async ({ memoryId }: LikeMemoryBody) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
   return await Instance({
     method: 'POST',
     url: `/api/un-like-memory`,
@@ -83,6 +91,8 @@ const unLikeMemory = async ({ memoryId }: LikeMemoryBody) => {
   })
 }
 const searchMemory = async (searchText: string) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
   return await Instance({
     method: 'GET',
     params: { searchText },
@@ -94,6 +104,8 @@ const searchMemory = async (searchText: string) => {
   })
 }
 const addBookmark = async ({ memoryId }: LikeMemoryBody) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
   return await Instance({
     method: 'POST',
     url: `/api/addbookmark-memory`,
@@ -105,6 +117,8 @@ const addBookmark = async ({ memoryId }: LikeMemoryBody) => {
   })
 }
 const removeBookmark = async ({ memoryId }: LikeMemoryBody) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
   return await Instance({
     method: 'POST',
     url: `/api/removeBookmark-memory`,

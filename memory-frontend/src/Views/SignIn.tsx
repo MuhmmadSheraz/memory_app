@@ -43,7 +43,8 @@ const Login = () => {
     },
     {
       onSuccess: (data) => {
-        localStorage.setItem('user_Session', JSON.stringify(data.data.user))
+        console.log({ data })
+        localStorage.setItem('user_Session', JSON.stringify(data?.data?.user))
         navigate('/')
         toast('Logged In', {
           position: 'top-right',

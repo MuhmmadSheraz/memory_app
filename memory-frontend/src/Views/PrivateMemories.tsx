@@ -16,8 +16,9 @@ const PrivateMemories = () => {
     'allMemories',
     getAllMemories,
     {
-      retry: 0,
       refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      enabled: true,
     }
   )
   if (isLoading) {

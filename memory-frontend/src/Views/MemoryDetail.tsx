@@ -23,8 +23,12 @@ const MemoryDetail = () => {
       like == user?._id ? setIsLiked(true) : null
     )
   }, [])
+  const handleGetMemory = (id: string) => {
+    console.log('refetching...')
+    return getMemory(id)
+  }
   const { data, isLoading, refetch } = useQuery(['memories', id], () => {
-    return getMemory(id ? id : '')
+    return handleGetMemory(id ? id : '')
   })
   if (isLoading) {
     return (

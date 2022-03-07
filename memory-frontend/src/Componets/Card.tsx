@@ -17,15 +17,15 @@ interface Props {
   handleRefetch: () => void
 }
 export const Card = ({ data, handleRefetch }: Props) => {
-  const { user, token } = useSession('user_Session', null)
+  const userData = useSession('user_Session', null)
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
     data?.likes.find((like: string) =>
-      like == user?._id ? setIsLiked(true) : null
+      like == userData?.user?._id ? setIsLiked(true) : null
     )
-    user?.myBookmarks.find((bookmark: string) =>
+    userData?.user?.myBookmarks.find((bookmark: string) =>
       bookmark == data?._id ? setIsBookmarked(true) : null
     )
   }, [])
@@ -40,7 +40,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
       memoryId: data?._id,
     }
     try {
-      if (data?.likes.includes(user?._id)) {
+      if (data?.likes.includes(userData?.user?._id)) {
         const response = await unLikeMemory(body)
         response?.status >= 200 && setIsLiked(false)
         handleRefetch()
@@ -61,17 +61,17 @@ export const Card = ({ data, handleRefetch }: Props) => {
     }
     try {
       let response: any
-      if (user?.myBookmarks.includes(data?._id)) {
+      if (userData?.user?.myBookmarks.includes(data?._id)) {
         response = await removeBookmark(body)
         handleRefetch()
-        const userCopy = { user: response?.data?.data, token }
+        const userCopy = { user: response?.data?.data, token: userData?.token }
         localStorage.setItem('user_Session', JSON.stringify(userCopy))
         response?.status == 200 && setIsBookmarked(false)
       } else {
         response = await addBookmark(body)
         response?.status >= 200 && setIsBookmarked(true)
         handleRefetch()
-        const userCopy = { user: response.data.data, token }
+        const userCopy = { user: response.data.data, token: userData?.token }
         localStorage.setItem('user_Session', JSON.stringify(userCopy))
       }
     } catch (error) {
