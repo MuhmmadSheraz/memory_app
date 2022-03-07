@@ -4,7 +4,12 @@ import dayjs from 'dayjs'
 import { Memory } from '../Types/Memory'
 import { useNavigate } from 'react-router-dom'
 import useSession from '../Helper/useSession'
-import { addBookmark, likeMemory, unLikeMemory } from '../Services/API/api'
+import {
+  addBookmark,
+  likeMemory,
+  removeBookmark,
+  unLikeMemory,
+} from '../Services/API/api'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
 interface Props {
@@ -55,18 +60,19 @@ export const Card = ({ data, handleRefetch }: Props) => {
       memoryId: data?._id,
     }
     try {
+      let response: any
       if (user?.myBookmarks.includes(data?._id)) {
-        // const response = await unLikeMemory(body)
-        // response?.status >= 200 && setIsLiked(false)
-        // handleRefetch()
-      } else {
-        const response = await addBookmark(body)
-        response?.status >= 200 && setIsBookmarked(true)
-        const userCopy = { user, token }
-        userCopy.user.myBookmarks.push(data?._id)
-        localStorage.setItem('user_Session', JSON.stringify(userCopy))
-
+        response = await removeBookmark(body)
         handleRefetch()
+        const userCopy = { user: response?.data?.data, token }
+        localStorage.setItem('user_Session', JSON.stringify(userCopy))
+        response?.status == 200 && setIsBookmarked(false)
+      } else {
+        response = await addBookmark(body)
+        response?.status >= 200 && setIsBookmarked(true)
+        handleRefetch()
+        const userCopy = { user: response.data.data, token }
+        localStorage.setItem('user_Session', JSON.stringify(userCopy))
       }
     } catch (error) {
       const err = error as AxiosError

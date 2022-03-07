@@ -3,7 +3,7 @@ import { generateError } from './../../helper/generateError'
 import { Request, Response } from 'express'
 import { User, userModal } from './../../model/user'
 
-export const addBookmark = async (req: Request, res: Response) => {
+export const removeBookmark = async (req: Request, res: Response) => {
   const {
     body: { memoryId },
     headers,
@@ -12,19 +12,20 @@ export const addBookmark = async (req: Request, res: Response) => {
   const { id } = tokenDecoder(authToken)
   try {
     if (!memoryId) return generateError(res, 500, 'memory id is required')
-    let user: User | null = await userModal.findByIdAndUpdate(id, {
+    let user: User | any = await userModal.findByIdAndUpdate(id, {
       new: true,
-      $addToSet: {
+      $pull: {
         myBookmarks: memoryId,
       },
     })
     if (!user) return generateError(res, 500, 'un-authorize request')
-    // @ts-ignore
-    user.myBookmarks.push(memoryId)
-
+    const updatedBookmarks = user?.myBookmarks.filter(
+      (bookmark: string) => bookmark != memoryId
+    )
+    user.myBookmarks = updatedBookmarks
     res.send({
       status: 200,
-      message: 'Memory bookmarked Successfully',
+      message: 'bookmark removed Successfully',
       data: user,
     })
   } catch (error) {

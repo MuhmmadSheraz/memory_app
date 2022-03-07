@@ -104,6 +104,17 @@ const addBookmark = async ({ memoryId }: LikeMemoryBody) => {
     },
   })
 }
+const removeBookmark = async ({ memoryId }: LikeMemoryBody) => {
+  return await Instance({
+    method: 'POST',
+    url: `/api/removeBookmark-memory`,
+    withCredentials: true,
+    data: { memoryId },
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
 export {
   onSignUp,
   onSignIn,
@@ -112,6 +123,7 @@ export {
   createMemory,
   getAllPrivateMemories,
   likeMemory,
+  removeBookmark,
   unLikeMemory,
   searchMemory,
   addBookmark,

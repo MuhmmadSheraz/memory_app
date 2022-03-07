@@ -1,3 +1,4 @@
+import { removeBookmark } from './../controller/Memory/removeBookmark'
 import { unLikeMemory } from './../controller/Memory/UnLikeMemory'
 import { likeMemory } from './../controller/Memory/LikeMemory'
 import { getAllPrivateMemories } from './../controller/Memory/GetPrivateMemories'
@@ -22,5 +23,6 @@ memoryRoutes.post(`/create-memory`, protect, createMemory)
 memoryRoutes.post(`/like-memory`, protect, likeMemory)
 memoryRoutes.post(`/un-like-memory`, protect, unLikeMemory)
 memoryRoutes.post(`/addbookmark-memory`, protect, addBookmark)
+memoryRoutes.post(`/removeBookmark-memory`, protect, removeBookmark)
 memoryRoutes.delete(`/delete-memory/:id`, deleteMemory)
 export default memoryRoutes
