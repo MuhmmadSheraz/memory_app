@@ -1,5 +1,5 @@
 import axios from 'axios'
-export const baseURL = 'http://127.0.0.1:3001'
+export const baseURL = 'https://mymemoryapp111.herokuapp.com'
 
 const Instance = axios.create({
   baseURL: baseURL,

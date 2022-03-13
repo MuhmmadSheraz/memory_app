@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var auth_1 = require("./../controller/Authentication/auth");
+var express_1 = require("express");
+var auth_2 = require("../controller/Authentication/auth");
+var authRoutes = (0, express_1.Router)();
+authRoutes.post("/users/sign-up", auth_2.signUp);
+authRoutes.post("/users/sign-in", auth_1.signIn);
+authRoutes.post("/users/forgot-password", auth_1.forgotPassword);
+authRoutes.get("/users/reset-password-validation/:token", auth_1.validateResetPasswordToken);
+authRoutes.post("/users/reset-password/:token", auth_1.resetPassword);
+exports.default = authRoutes;

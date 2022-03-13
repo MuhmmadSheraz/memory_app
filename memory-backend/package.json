@@ -2,17 +2,21 @@
   "name": "memory-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
-    "tsc": "nodemon --config nodemon.json server.ts",
+    "tsc": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/server.js\"",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "ts-node server.ts",
+    "dev": "nodemon -x ts-node server.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
     "cloudinary": "^1.28.1",
@@ -25,9 +29,8 @@
     "mongoose": "^6.1.8",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
-    "validator": "^13.7.0"
-  },
-  "devDependencies": {
+    "tsc-watch": "^4.6.2",
+    "validator": "^13.7.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
@@ -43,7 +46,10 @@
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.28.0",
-    "typescript": "^4.5.4"
+    "eslint-plugin-react": "^7.28.0"
+  },
+  "devDependencies": {
+   
+    
   }
 }

@@ -96,6 +96,7 @@ const SignUp = () => {
         <AuthInput
           register={register}
           name={'name'}
+          type="text"
           placeholder={'Please enter your name'}
         />
         {errors.name && (
@@ -104,6 +105,7 @@ const SignUp = () => {
         <AuthInput
           register={register}
           name={'email'}
+          type={'email'}
           placeholder={'Please enter your email'}
         />
 
@@ -113,6 +115,7 @@ const SignUp = () => {
         <AuthInput
           register={register}
           name={'password'}
+          type={'password'}
           placeholder={'Please enter your password'}
         />
 
@@ -124,6 +127,7 @@ const SignUp = () => {
         <AuthInput
           register={register}
           name={'confirmPassword'}
+          type={'password'}
           placeholder={'Please enter your confirm password'}
         />
 

@@ -91,6 +91,7 @@ const Login = () => {
           register={register}
           name={'email'}
           placeholder={'Please enter your email'}
+          type="email"
         />
 
         {errors.email && (
@@ -99,6 +100,7 @@ const Login = () => {
         <AuthInput
           register={register}
           name={'password'}
+          type={'password'}
           placeholder={'Please enter your password'}
         />
 
@@ -125,7 +127,10 @@ const Login = () => {
         </button>
       </form>
       <p className="mt-4 text-green-800 text-xl">
-        Don't have an account ? <Link to={'/signup'}>Register Here</Link>
+        Don't have an account ?{' '}
+        <Link to={'/signup'} className="font-semibold">
+          Register Here
+        </Link>
       </p>
     </div>
   )
