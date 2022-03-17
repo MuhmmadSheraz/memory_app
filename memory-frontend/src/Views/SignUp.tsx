@@ -154,7 +154,10 @@ const SignUp = () => {
         </button>
       </form>
       <p className="mt-4 text-green-800 text-xl">
-        Already have an account ? <Link to={'/login'}>Login Here</Link>
+        Already have an account ?{' '}
+        <Link to={'/login'} className="font-semibold">
+          Login Here
+        </Link>
       </p>
     </div>
   )

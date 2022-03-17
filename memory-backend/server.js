@@ -14,7 +14,8 @@ const Memory_1 = __importDefault(require("./routes/Memory"));
 const dbConnection_1 = require("./helper/dbConnection");
 const Auth_1 = __importDefault(require("./routes/Auth"));
 const app = (0, express_1.default)();
-const port = process_1.default.env.PORT || 3001;
+const port = process_1.default.env.NODE_ENV === 'development' ? 3001 : process_1.default.env.PORT;
+console.log('env--', process_1.default.env.NODE_ENV);
 // Express Middlewares
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -31,7 +32,6 @@ dotenv_1.default.config({
 app.use(`/api`, Memory_1.default);
 app.use(`/api`, Auth_1.default);
 app.use((0, cookie_parser_1.default)());
-app.listen(process_1.default.env.PORT, () => {
-    console.log(process_1.default.env, 'hello');
-    console.log(`server is started 💨 on port ${process_1.default.env.PORT} `);
-});
+// app.listen(3001, () => {
+//   console.log(`server is started 💨 on port ${3001} `)
+// })

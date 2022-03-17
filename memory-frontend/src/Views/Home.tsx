@@ -12,6 +12,7 @@ const Home = () => {
   const navigate = useNavigate()
   useEffect(() => {
     refetch()
+    console.log(process.env.NODE_ENV)
   }, [])
 
   const getAllMemories = () => {

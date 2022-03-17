@@ -9,8 +9,9 @@ import memoryRoutes from './routes/Memory'
 import { connectDB } from './helper/dbConnection'
 import authRoutes from './routes/Auth'
 const app: Application = Express()
-const port = process.env.PORT || 3001
-
+const port =
+  process.env.NODE_ENV === 'development' || undefined ? 3001 : process.env.PORT
+console.log('env--', process.env.NODE_ENV)
 // Express Middlewares
 app.use(Express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -31,6 +32,5 @@ app.use(`/api`, memoryRoutes)
 app.use(`/api`, authRoutes)
 app.use(cookieParser())
 app.listen(process.env.PORT, () => {
-  console.log(process.env, 'hello')
   console.log(`server is started 💨 on port ${process.env.PORT} `)
 })
