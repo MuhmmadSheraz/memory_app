@@ -24,7 +24,6 @@ const MemoryDetail = () => {
     )
   }, [])
   const handleGetMemory = (id: string) => {
-    console.log('refetching...')
     return getMemory(id)
   }
   const { data, isLoading, refetch } = useQuery(['memories', id], () => {
