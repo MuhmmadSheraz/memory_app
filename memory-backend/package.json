@@ -4,11 +4,10 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "tsc": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/server.js\"",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "build": "tsc",
-    "start": "ts-node server.ts",
+    "tsc": "nodemon server.ts",
     "dev": "nodemon -x ts-node server.ts"
   },
   "keywords": [],

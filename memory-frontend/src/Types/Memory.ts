@@ -2,10 +2,11 @@ export type Memory = {
   _id: string
   title: string
   description: string
-  image: string
+  image: string | { public_id: string; url: string }
   createdAt: string
   likes: string[]
   tags: string[]
+  userId: string
 }
 export type CreateMemoryBody = {
   title: string

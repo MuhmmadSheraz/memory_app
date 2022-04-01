@@ -4,18 +4,25 @@ import * as yup from 'yup'
 import { InputTag } from '../Componets/InputTag'
 import { useState } from 'react'
 import { useMutation } from 'react-query'
-import { createMemory } from '../Services/API/api'
-import useSession from '../Helper/useSession'
+import { createMemory, updateMemory } from '../Services/API/api'
 import { TailSpin } from 'react-loader-spinner'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import useSession from '../Helper/useSession'
 
 type Inputs = {
   title: string
   description: string
   memImage: string
   isPublic: boolean
+}
+type ABC = {
+  hash: string
+  key: string
+  pathname: string
+  search: string
+  state?: any
 }
 const schema = yup
   .object({
@@ -33,16 +40,25 @@ const schema = yup
   .required()
 const CreateMemory = () => {
   const navigate = useNavigate()
+  const location: ABC = useLocation()
+  const userData = useSession('user_Session', null)
 
-  const authCreds = useSession('user_Session', null)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      title: location.state.data.title,
+      description: location.state.data.description,
+      memImage: location.state.data.image,
+      isPublic: location.state.data.isPublic,
+    },
   })
-  const [tags, setTags] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>(
+    location.state.editable ? location.state.data.tags : []
+  )
   const mutation = useMutation(
     async (formData: FormData | any) => {
       return await createMemory(formData)
@@ -76,14 +92,53 @@ const CreateMemory = () => {
       },
     }
   )
+  const updateMemoryMutation = useMutation(
+    async (formData: FormData | any) => {
+      return await updateMemory(formData)
+    },
+    {
+      onSuccess: () => {
+        toast('Memory Updated', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          type: 'success',
+        })
+        navigate('/')
+      },
+      onError: () => {
+        const err = mutation.error as AxiosError
+        toast(err.response?.data.message, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          type: 'error',
+        })
+      },
+    }
+  )
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const formData = new FormData()
-    formData.append('image', data?.memImage[0])
     formData.append('title', data?.title)
     formData.append('description', data?.description)
     formData.append('tags', JSON.stringify(tags))
     formData.append('isPublic', JSON.stringify(data?.isPublic))
-    mutation.mutateAsync(formData)
+    formData.append('image', data?.memImage[0])
+    if (location.state.editable) {
+      formData.append('_id', location.state?.data?._id)
+      formData.append('public_id', location.state?.data?.image?.public_id)
+      updateMemoryMutation.mutateAsync(formData)
+    } else {
+      mutation.mutateAsync(formData)
+    }
   }
 
   const handleOnChange = (e: React.KeyboardEvent | any) => {
@@ -101,7 +156,7 @@ const CreateMemory = () => {
     <div>
       <div className="mt-16 pt-5 flex h-full justify-center min-w-[100vw] items-center flex-col px-5 bg-gray-100 min-h-[90vh]">
         <h1 className=" text-2xl sm:text-3xl font-semibold my-2">
-          Create a memory
+          {location?.state?.editable ? 'Edit' : 'Create'} a memory
         </h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -149,8 +204,12 @@ const CreateMemory = () => {
             />
 
             <img
-              className="w-8 h-8 absolute right-2 top-[10px] hidden sm:block"
-              src="https://cdn.dribbble.com/users/443570/screenshots/5276693/therapist.jpg?compress=1&resize=800x600&vertical=top"
+              className="w-8 h-8 absolute right-2 top-[10px] hidden sm:block cursor-pointer"
+              src={
+                location.state.editable
+                  ? location.state.data.image?.url || location.state.data.image
+                  : 'https://cdn.dribbble.com/users/443570/screenshots/5276693/therapist.jpg?compress=1&resize=800x600&vertical=top'
+              }
             />
           </div>
           {errors.memImage && (
@@ -186,9 +245,12 @@ const CreateMemory = () => {
                   ariaLabel="loading"
                 />
               </>
+            ) : location.state.editable ? (
+              'Edit'
             ) : (
-              'Create Memory'
-            )}
+              'Create'
+            )}{' '}
+            Memory
           </button>
         </form>
       </div>

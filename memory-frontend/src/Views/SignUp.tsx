@@ -10,6 +10,8 @@ import { TailSpin } from 'react-loader-spinner'
 import { AxiosError } from 'axios'
 import { SignUpUser } from '../Types/Auth'
 import { Link, useNavigate } from 'react-router-dom'
+import useSession from '../Helper/useSession'
+import { useEffect } from 'react'
 
 type Inputs = {
   email: string
@@ -28,7 +30,11 @@ const schema = yup
 
 const SignUp = () => {
   const navigate = useNavigate()
-
+  const validUser = useSession('user_Session', null)
+  console.log(validUser)
+  useEffect(() => {
+    !!validUser?.token && navigate('/')
+  }, [])
   const {
     register,
     handleSubmit,

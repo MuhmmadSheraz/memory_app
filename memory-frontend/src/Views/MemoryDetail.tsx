@@ -37,6 +37,7 @@ const MemoryDetail = () => {
       </div>
     )
   }
+  console.log({ data })
   const handleLikeAction = async (e: any) => {
     e.stopPropagation()
     const body = {
@@ -62,7 +63,7 @@ const MemoryDetail = () => {
       <div className="w-full md:w-1/2">
         <img
           className="h-[50vh] md:min-h-screen w-full md:w-1/2 md:fixed top-0 left-0"
-          src={data?.data?.data?.image}
+          src={data?.data?.data?.image.url || data?.data?.data?.image}
         />
         <BsFillArrowLeftCircleFill
           onClick={() => navigate(-1)}

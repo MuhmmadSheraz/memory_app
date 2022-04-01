@@ -1,5 +1,9 @@
 import mongoose, { Schema } from 'mongoose'
 const currentDate = new Date()
+type MemoryImage = {
+  public_id: string
+  url: string
+}
 const memorySchema: Schema = new Schema({
   title: {
     type: String,
@@ -10,7 +14,7 @@ const memorySchema: Schema = new Schema({
     require: [true, 'description is required for memory'],
   },
   image: {
-    type: String,
+    type: Object,
     require: [true, 'image is required'],
   },
   createdAt: {

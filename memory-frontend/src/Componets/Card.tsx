@@ -9,6 +9,7 @@ import {
   likeMemory,
   removeBookmark,
   unLikeMemory,
+  updateMemory,
 } from '../Services/API/api'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
@@ -22,6 +23,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
+    console.log({ userData })
     data?.likes.find((like: string) =>
       like == userData?.user?._id ? setIsLiked(true) : null
     )
@@ -34,7 +36,19 @@ export const Card = ({ data, handleRefetch }: Props) => {
   const handleShowDetail = () => {
     navigate(`/memory/${data?._id}`)
   }
-  const handleLikeAction = async (e: any) => {
+  const handleEditMemory = async (e: React.MouseEvent<SVGAElement>) => {
+    e.stopPropagation()
+    console.log({ data })
+    navigate(`/create`, {
+      state: {
+        editable: userData?.user?._id == data?.userId ? true : false,
+        data,
+      },
+    })
+    // const response = await updateMemory(data)
+    // console.log({ response })
+  }
+  const handleLikeAction = async (e: React.MouseEvent<SVGAElement>) => {
     e.stopPropagation()
     const body = {
       memoryId: data?._id,
@@ -79,6 +93,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
       console.log(err.message)
     }
   }
+
   return (
     <div
       onClick={handleShowDetail}
@@ -96,10 +111,21 @@ export const Card = ({ data, handleRefetch }: Props) => {
             <h3 className="text-gray-500">Karachi,Pakistan</h3>
           </div>
         </div>
-        <BsThreeDots size={20} className="text-gray-500" />
+        {userData?.user?._id == data?.userId && (
+          <BsThreeDots
+            onClick={handleEditMemory}
+            size={24}
+            className="text-gray-500"
+            title="edit memory"
+          />
+        )}
       </div>
       {/* Image */}
-      <img className="h-48 w-full rounded-3xl" src={data?.image} />
+      <img
+        className="h-48 w-full rounded-3xl"
+        //@ts-ignore
+        src={data?.image?.url || data.image}
+      />
       <div className="my-3 mx-2 flex items-center justify-between">
         <div className="flex space-x-3 items-center">
           <BsHeartFill

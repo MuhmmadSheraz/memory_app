@@ -28,14 +28,17 @@ export const createMemory = async (req: Request, res: Response) => {
         if (error) {
           console.log('err', error)
         } else {
-          console.log('result', result)
-          memBody.image = result.url
+          console.log('result***', result)
+          memBody.image = {
+            public_id: result.public_id,
+            url: result.url,
+          }
         }
       }
     )
     await memories.create(memBody)
 
-    console.log('body***', memBody)
+    console.log('body', memBody)
     res.send({
       status: 201,
       message: 'success',

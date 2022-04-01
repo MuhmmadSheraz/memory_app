@@ -1,4 +1,4 @@
-import { CreateMemoryBody, LikeMemoryBody } from './../../Types/Memory'
+import { CreateMemoryBody, LikeMemoryBody, Memory } from './../../Types/Memory'
 import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
 
@@ -129,6 +129,16 @@ const removeBookmark = async ({ memoryId }: LikeMemoryBody) => {
     },
   })
 }
+const updateMemory = async (memory: Memory) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
+  return await Instance.put('http://127.0.0.1:3001/api/update-memory', memory, {
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
 export {
   onSignUp,
   onSignIn,
@@ -141,4 +151,5 @@ export {
   unLikeMemory,
   searchMemory,
   addBookmark,
+  updateMemory,
 }
