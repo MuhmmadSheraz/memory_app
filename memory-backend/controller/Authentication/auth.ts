@@ -32,6 +32,8 @@ export const signUp = async (req: Request, res: Response) => {
       message: 'user created Successfully',
     })
   } catch (error: any) {
+    if (error.message.includes('E11000 duplicate key error collection'))
+      return generateError(res, 500, 'Account Already Exists')
     generateError(res, 500, error.message)
   }
 }
