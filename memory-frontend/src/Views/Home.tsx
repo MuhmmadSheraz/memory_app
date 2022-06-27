@@ -20,7 +20,7 @@ const Home = () => {
     return getMemories()
   }
   const { data, isError, isLoading, error, refetch } = useQuery(
-    'allMemories',
+    ['allMemories'],
     getAllMemories,
 
     {

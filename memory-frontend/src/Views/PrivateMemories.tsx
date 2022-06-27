@@ -13,7 +13,7 @@ const PrivateMemories = () => {
     return getAllPrivateMemories()
   }
   const { data, isError, isLoading, error, refetch } = useQuery(
-    'allMemories',
+    ['allMemories'],
     getAllMemories,
     {
       refetchOnWindowFocus: false,

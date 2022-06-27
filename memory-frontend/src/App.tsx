@@ -10,7 +10,6 @@ const queryClient = new QueryClient()
 
 function App() {
   return (
-    // @ts-ignore
     <QueryClientProvider client={queryClient}>
       <MainRouter />
       <ToastContainer />
