@@ -4,7 +4,9 @@ export const getAllMemories = async (req: Request, res: Response) => {
   let data: any
   try {
     // finds all the docs.
-    data = await memories.find({ isPublic: { $ne: false } })
+    data = await memories
+      .find({ isPublic: { $ne: false } })
+      .sort({ createdAt: -1 })
 
     // Filter Methods
 

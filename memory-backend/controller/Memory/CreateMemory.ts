@@ -16,6 +16,7 @@ export const createMemory = async (req: Request, res: Response) => {
     const { id } = tokenDecoder(authToken)
 
     let memBody: any = { ...body }
+    console.log(memBody)
     memBody.tags = JSON.parse(body?.tags)
     memBody.userId = id
     await cloudinary.v2.uploader?.upload(

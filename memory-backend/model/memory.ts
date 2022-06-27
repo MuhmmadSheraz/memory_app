@@ -19,7 +19,7 @@ const memorySchema: Schema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: currentDate.getDate(),
+    default: Date.now,
   },
   likes: {
     type: [String],

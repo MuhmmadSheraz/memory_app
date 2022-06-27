@@ -17,7 +17,7 @@ type Inputs = {
   memImage: string
   isPublic: boolean
 }
-type ABC = {
+type Location = {
   hash: string
   key: string
   pathname: string
@@ -40,9 +40,9 @@ const schema = yup
   .required()
 const CreateMemory = () => {
   const navigate = useNavigate()
-  const location: ABC = useLocation()
+  const location: Location = useLocation()
   const userData = useSession('user_Session', null)
-
+  console.log({ location })
   const {
     register,
     handleSubmit,
@@ -50,14 +50,14 @@ const CreateMemory = () => {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
     defaultValues: {
-      title: location.state.data.title,
-      description: location.state.data.description,
-      memImage: location.state.data.image,
-      isPublic: location.state.data.isPublic,
+      title: location?.state?.data?.title,
+      description: location?.state?.data?.title,
+      memImage: location?.state?.data?.title,
+      isPublic: location?.state?.data?.title,
     },
   })
   const [tags, setTags] = useState<string[]>(
-    location.state.editable ? location.state.data.tags : []
+    location.state?.editable ? location.state?.data?.tags : []
   )
   const mutation = useMutation(
     async (formData: FormData | any) => {
@@ -79,7 +79,7 @@ const CreateMemory = () => {
       },
       onError: () => {
         const err = mutation.error as AxiosError
-        toast(err.response?.data.message, {
+        toast(err.response?.data?.message, {
           position: 'top-right',
           autoClose: 2000,
           hideProgressBar: false,
@@ -112,7 +112,7 @@ const CreateMemory = () => {
       },
       onError: () => {
         const err = mutation.error as AxiosError
-        toast(err.response?.data.message, {
+        toast(err.response?.data?.message, {
           position: 'top-right',
           autoClose: 2000,
           hideProgressBar: false,
@@ -127,14 +127,14 @@ const CreateMemory = () => {
   )
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const formData = new FormData()
-    formData.append('title', data?.title)
-    formData.append('description', data?.description)
-    formData.append('tags', JSON.stringify(tags))
-    formData.append('isPublic', JSON.stringify(data?.isPublic))
-    formData.append('image', data?.memImage[0])
-    if (location.state.editable) {
-      formData.append('_id', location.state?.data?._id)
-      formData.append('public_id', location.state?.data?.image?.public_id)
+    formData?.append('title', data?.title)
+    formData?.append('description', data?.description)
+    formData?.append('tags', JSON.stringify(tags))
+    formData?.append('isPublic', JSON.stringify(data?.isPublic))
+    formData?.append('image', data?.memImage[0])
+    if (location.state?.editable) {
+      formData?.append('_id', location.state?.data?._id)
+      formData?.append('public_id', location.state?.data?.image?.public_id)
       updateMemoryMutation.mutateAsync(formData)
     } else {
       mutation.mutateAsync(formData)
@@ -206,8 +206,9 @@ const CreateMemory = () => {
             <img
               className="w-8 h-8 absolute right-2 top-[10px] hidden sm:block cursor-pointer"
               src={
-                location.state.editable
-                  ? location.state.data.image?.url || location.state.data.image
+                location.state?.editable
+                  ? location.state?.data?.image?.url ||
+                    location.state?.data?.image
                   : 'https://cdn.dribbble.com/users/443570/screenshots/5276693/therapist.jpg?compress=1&resize=800x600&vertical=top'
               }
             />
@@ -245,7 +246,7 @@ const CreateMemory = () => {
                   ariaLabel="loading"
                 />
               </>
-            ) : location.state.editable ? (
+            ) : location.state?.editable ? (
               'Edit'
             ) : (
               'Create'
