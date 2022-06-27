@@ -106,7 +106,7 @@ const SignUp = () => {
           placeholder={'Please enter your name'}
         />
         {errors.name && (
-          <span className="m_0 pt-2 text-black">{errors?.name.message}</span>
+          <span className="m_0 pt-2 text-red-500">{errors?.name.message}</span>
         )}
         <AuthInput
           register={register}
@@ -116,7 +116,7 @@ const SignUp = () => {
         />
 
         {errors.email && (
-          <span className="m_0 pt-2 text-black">{errors?.email.message}</span>
+          <span className="m_0 pt-2 text-red-500">{errors?.email.message}</span>
         )}
         <AuthInput
           register={register}
@@ -126,7 +126,7 @@ const SignUp = () => {
         />
 
         {errors.password && (
-          <span className="m_0 pt-2  text-black">
+          <span className="m_0 pt-2  text-red-500">
             {errors?.password.message}
           </span>
         )}
@@ -138,7 +138,7 @@ const SignUp = () => {
         />
 
         {errors.confirmPassword && (
-          <span className="m_0 pt-2  text-black">
+          <span className="m_0 pt-2  text-red-500">
             {errors?.confirmPassword.message}
           </span>
         )}

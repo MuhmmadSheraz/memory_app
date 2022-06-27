@@ -95,7 +95,9 @@ const Login = () => {
         />
 
         {errors.email && (
-          <span className="m_0 pt-2 text-black ">{errors?.email.message}</span>
+          <span className="m_0 pt-2 text-red-500 ">
+            {errors?.email.message}
+          </span>
         )}
         <AuthInput
           register={register}
@@ -105,7 +107,7 @@ const Login = () => {
         />
 
         {errors.password && (
-          <span className="m_0 pt-2  text-black">
+          <span className="m_0 pt-2 text-red-500">
             {errors?.password.message}
           </span>
         )}
