@@ -45,8 +45,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
         data,
       },
     })
-    // const response = await updateMemory(data)
-    // console.log({ response })
   }
   const handleLikeAction = async (e: React.MouseEvent<SVGAElement>) => {
     e.stopPropagation()
@@ -108,7 +106,9 @@ export const Card = ({ data, handleRefetch }: Props) => {
           />
           <div className="ml-2 text-sm">
             <h2 className="font-semibold">{data?.title}</h2>
-            <h3 className="text-gray-500">Karachi,Pakistan</h3>
+            <h3 className="text-gray-500">
+              {dayjs(data?.createdAt).format('ddd-MMM-YYYY')}
+            </h3>
           </div>
         </div>
         {userData?.user?._id == data?.userId && (
@@ -154,11 +154,8 @@ export const Card = ({ data, handleRefetch }: Props) => {
           <span className="font-semibold"> Hamza and 254 others</span>
         </p>
       </div>
-      <div className="mx-2 mt-3 font-semibold text-sm lg:text-base truncate  text-ellipsis overflow-hidden">
+      <div className="mx-2 my-3 font-semibold text-sm lg:text-base truncate  text-ellipsis overflow-hidden">
         “{data?.description}
-      </div>
-      <div className="ml-5 mb-3 text-gray-500 text-sm lg:text-base">
-        {dayjs(data?.createdAt).format('ddd-MMM-YYYY')}
       </div>
     </div>
   )
