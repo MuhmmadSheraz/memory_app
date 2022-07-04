@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import * as yup from 'yup'
@@ -11,7 +11,8 @@ import { AxiosError } from 'axios'
 import { SignUpUser } from '../Types/Auth'
 import { Link, useNavigate } from 'react-router-dom'
 import useSession from '../Helper/useSession'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import MemoryBackground from '../Assets/Images/mem.jpg'
 
 type Inputs = {
   email: string
@@ -31,15 +32,16 @@ const schema = yup
 const SignUp = () => {
   const navigate = useNavigate()
   const validUser = useSession('user_Session', null)
-  console.log(validUser)
   useEffect(() => {
     !!validUser?.token && navigate('/')
   }, [])
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
+    watch,
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   })
@@ -88,82 +90,107 @@ const SignUp = () => {
     }
     handleSignUp.mutateAsync(body)
   }
+  const userName = watch('name')
 
   return (
-    <div className="bg-lime-100 min-h-screen flex justify-center items-center  flex-col min-w-screen">
-      <h1 className=" text-2xl sm:text-3xl md:text-4xl mb-6  lg:text-5xl font-semibold text-lime-500 pb-[0.5%]">
-        Memory App
-      </h1>
-      <form
-        className=" flex justify-center items-center space-y-3 flex-col w-full"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <AuthInput
-          register={register}
-          name={'name'}
-          type="text"
-          placeholder={'Please enter your name'}
+    <div className="bg-blue-100 min-h-screen flex justify-center items-center  flex-col min-w-screen">
+      <div className="w-11/12 flex items-center rounded-lg">
+        <img
+          src={MemoryBackground}
+          className=" h-[90vh] w-0 md:w-1/2  rounded-tl-xl   rounded-bl-xl"
         />
-        {errors.name && (
-          <span className="m_0 pt-2 text-red-500">{errors?.name.message}</span>
-        )}
-        <AuthInput
-          register={register}
-          name={'email'}
-          type={'email'}
-          placeholder={'Please enter your email'}
-        />
-
-        {errors.email && (
-          <span className="m_0 pt-2 text-red-500">{errors?.email.message}</span>
-        )}
-        <AuthInput
-          register={register}
-          name={'password'}
-          type={'password'}
-          placeholder={'Please enter your password'}
-        />
-
-        {errors.password && (
-          <span className="m_0 pt-2  text-red-500">
-            {errors?.password.message}
-          </span>
-        )}
-        <AuthInput
-          register={register}
-          name={'confirmPassword'}
-          type={'password'}
-          placeholder={'Please enter your confirm password'}
-        />
-
-        {errors.confirmPassword && (
-          <span className="m_0 pt-2  text-red-500">
-            {errors?.confirmPassword.message}
-          </span>
-        )}
-        <button
-          disabled={handleSignUp.isLoading}
-          type="submit"
-          className="w-[30%] text-center flex justify-center items-center sm:w-[25%] md:w-[15%] lg:w-[12%] border py-2 border-lime-500 text-lg outline-none  rounded-md text-lime-500 hover:bg-lime-500 hover:text-white   transition-all ease-out duration-300"
+        <form
+          className="flex flex-col justify-center items-center w-[100%] md:w-1/2 bg-blue-300 h-[90vh] relative  md:rounded-tr-xl md:rounded-br-xl md:rounded-tl-none  md:rounded-bl-none rounded-xl "
+          onSubmit={handleSubmit(onSubmit)}
         >
-          {handleSignUp.isLoading ? (
-            <TailSpin
-              height="30"
-              width="30"
-              color="green"
-              ariaLabel="loading"
+          <h6 className="text-sm font-semibold my-3">Memory App</h6>
+          <h3 className="text-3xl font-semibold my-3">
+            Hello {userName}
+            {!!userName && '!'}
+          </h3>
+          <p className="text-xs sm:text-base">
+            Create and Save Your Memories with others.{' '}
+          </p>
+
+          <div className="w-full my-2 text-center flex-col">
+            <AuthInput
+              register={register}
+              name={'name'}
+              type="text"
+              placeholder={'Please enter your name'}
             />
-          ) : (
-            'Sign Up'
-          )}
-        </button>
-      </form>
-      <p className="mt-4 text-green-800 text-xl">
-        Already have an account ?{' '}
-        <Link to={'/login'} className="font-semibold">
-          Login Here
-        </Link>
-      </p>
+            {errors.name && (
+              <span className="m_0 pt-2 text-red-500 block ">
+                {errors?.name.message}
+              </span>
+            )}
+          </div>
+          <div className="w-full my-2 text-center flex-col">
+            <AuthInput
+              register={register}
+              name={'email'}
+              placeholder={'Please enter your email'}
+              type="email"
+            />
+
+            {errors.email && (
+              <span className="m_0 pt-2 text-red-500 block ">
+                {errors?.email.message}
+              </span>
+            )}
+          </div>
+          <div className="w-full my-2 text-center flex-col ">
+            <AuthInput
+              register={register}
+              name={'password'}
+              type={'password'}
+              placeholder={'Please enter your password'}
+            />
+
+            {errors.password && (
+              <span className="m_0 pt-2 text-red-500 block">
+                {errors?.password.message}
+              </span>
+            )}
+          </div>
+          <div className="w-full my-2 text-center flex-col ">
+            <AuthInput
+              register={register}
+              name={'confirmPassword'}
+              type={'password'}
+              placeholder={'Please enter your confirm password'}
+            />
+
+            {errors.confirmPassword && (
+              <span className="m_0 pt-2 text-red-500 block">
+                {errors?.confirmPassword.message}
+              </span>
+            )}
+          </div>
+          <button
+            disabled={handleSignUp.isLoading}
+            type="submit"
+            className=" text-center flex justify-center items-center w-[30%] border py-2 border-blue-500 text-lg outline-none  rounded-md text-white  hover:bg-blue-700 bg-blue-500 hover:text-white   transition-all ease-out duration-300 mt-3  "
+          >
+            {handleSignUp.isLoading ? (
+              <TailSpin
+                height="30"
+                width="30"
+                color="white"
+                ariaLabel="loading"
+              />
+            ) : (
+              'SignUp'
+            )}
+          </button>
+          <p className="mt-4 text-gray-500 md:text-lg lg:text-xl self-center  absolute bottom-5 text-center ">
+            Already have an account?{' '}
+            <Link to={'/login'} className="font-semibold text-blue-500">
+              Login Here
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   )
 }
