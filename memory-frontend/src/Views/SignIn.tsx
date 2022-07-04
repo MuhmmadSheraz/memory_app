@@ -83,15 +83,17 @@ const Login = () => {
       <div className="w-11/12 flex items-center rounded-lg">
         <img
           src={MemoryBackground}
-          className=" h-[90vh] w-1/2  rounded-tl-xl   rounded-bl-xl"
+          className=" h-[90vh] w-0 md:w-1/2  rounded-tl-xl   rounded-bl-xl"
         />
         <form
-          className="flex flex-col justify-center items-center  w-1/2 bg-blue-300 h-[90vh] relative"
+          className="flex flex-col justify-center items-center w-[100%] md:w-1/2 bg-blue-300 h-[90vh] relative  md:rounded-tr-xl md:rounded-br-xl md:rounded-tl-none  md:rounded-bl-none rounded-xl "
           onSubmit={handleSubmit(onSubmit)}
         >
           <h6 className="text-sm font-semibold my-3">Memory App</h6>
           <h3 className="text-3xl font-semibold my-3">Hello Again!</h3>
-          <p>Create and Save Your Memories with others. </p>
+          <p className="text-xs sm:text-base">
+            Create and Save Your Memories with others.{' '}
+          </p>
 
           <div className="w-full my-2 text-center flex-col">
             <AuthInput
@@ -124,20 +126,20 @@ const Login = () => {
           <button
             disabled={handleSignIn.isLoading}
             type="submit"
-            className="w-[30%] text-center flex justify-center items-center sm:w-[25%] md:w-[15%] lg:w-[30%] border py-2 border-blue-500 text-lg outline-none  rounded-md text-white  hover:bg-blue-700 bg-blue-500 hover:text-white   transition-all ease-out duration-300 mt-3  "
+            className=" text-center flex justify-center items-center w-[30%] border py-2 border-blue-500 text-lg outline-none  rounded-md text-white  hover:bg-blue-700 bg-blue-500 hover:text-white   transition-all ease-out duration-300 mt-3  "
           >
             {handleSignIn.isLoading ? (
               <TailSpin
                 height="30"
                 width="30"
-                color="blue"
+                color="white"
                 ariaLabel="loading"
               />
             ) : (
               'Login'
             )}
           </button>
-          <p className="mt-4 text-gray-500 text-xl self-center  absolute bottom-5 text-center ">
+          <p className="mt-4 text-gray-500 md:text-lg lg:text-xl self-center  absolute bottom-5 text-center ">
             Don't have an account yet?{' '}
             <Link to={'/signup'} className="font-semibold text-blue-500">
               SignUp
