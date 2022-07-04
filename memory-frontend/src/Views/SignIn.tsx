@@ -26,7 +26,6 @@ const schema = yup
 const Login = () => {
   const navigate = useNavigate()
   const validUser = useSession('user_Session', null)
-  console.log(validUser)
   useEffect(() => {
     !!validUser?.token && navigate('/')
   }, [])
@@ -43,7 +42,6 @@ const Login = () => {
     },
     {
       onSuccess: (data) => {
-        console.log({ data })
         localStorage.setItem('user_Session', JSON.stringify(data?.data?.user))
         navigate('/', { replace: true })
         toast('Logged In', {
@@ -59,7 +57,6 @@ const Login = () => {
       },
       onError: (error) => {
         const err = error as AxiosError
-        console.log(err.response?.data.message)
         toast(err.response?.data.message, {
           position: 'top-right',
           autoClose: 3000,
