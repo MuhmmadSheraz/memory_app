@@ -30,6 +30,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
       bookmark == data?._id ? setIsBookmarked(true) : null
     )
   }, [])
+  useEffect(() => handleRefetch(), [isBookmarked])
 
   const navigate = useNavigate()
   const handleShowDetail = () => {
@@ -73,14 +74,12 @@ export const Card = ({ data, handleRefetch }: Props) => {
       let response: any
       if (userData?.user?.myBookmarks.includes(data?._id)) {
         response = await removeBookmark(body)
-        handleRefetch()
         const userCopy = { user: response?.data?.data, token: userData?.token }
         localStorage.setItem('user_Session', JSON.stringify(userCopy))
         response?.status == 200 && setIsBookmarked(false)
       } else {
         response = await addBookmark(body)
         response?.status >= 200 && setIsBookmarked(true)
-        handleRefetch()
         const userCopy = { user: response.data.data, token: userData?.token }
         localStorage.setItem('user_Session', JSON.stringify(userCopy))
       }

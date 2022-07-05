@@ -3,16 +3,17 @@ import { Request, Response } from 'express'
 export const getAllBookmarkMemories = async (req: Request, res: Response) => {
   const { params } = req
   try {
-    const ids = params.ids.split(',')
-    let response = await memories.find({
+    const ids = params.ids?.split(',')
+    console.log(params)
+    let data = await memories.find({
       isPublic: { $eq: true },
       _id: { $in: ids },
     })
 
     res.send({
       status: 'success',
-      length: response?.length,
-      response: response,
+      length: data?.length,
+      data: data,
     })
   } catch (error: any) {
     res.send({

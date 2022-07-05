@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
+import BookmarkMemories from '../Views/BookmarkMemories'
 import CreateMemory from '../Views/CreateMemory'
 import Home from '../Views/Home'
 import MemoryDetail from '../Views/MemoryDetail'
@@ -40,6 +41,14 @@ export default function MainRouter() {
           element={
             <ProtectedRoute>
               <PrivateMemories />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bookmarks"
+          element={
+            <ProtectedRoute>
+              <BookmarkMemories />
             </ProtectedRoute>
           }
         />

@@ -38,7 +38,17 @@ export const Sidebar = ({ showSidebar, setShowSidebar }: Props) => {
           onClick={() => setShowSidebar(false)}
         >
           <BiLockAlt className="mr-3 text-xl" />
-          Private Memory
+          Private Memories
+        </Link>
+        <Link
+          to="/bookmarks"
+          className={` items-center rounded-lg hover:text-white hover:bg-blue-500 text-lg hover:font-semibold cursor-pointer duration-200 bg-gray-100 w-[100%] h-12 flex justify-start px-4 ${
+            location.pathname == '/bookmark' && 'bg-blue-500 text-white'
+          }`}
+          onClick={() => setShowSidebar(false)}
+        >
+          <BiLockAlt className="mr-3 text-xl" />
+          Bookmark Memories
         </Link>
       </ul>
       <footer className="w-full self-end justify-center bg-white">
