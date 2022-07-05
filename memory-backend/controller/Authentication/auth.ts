@@ -137,12 +137,10 @@ export const protect = async (
   next: NextFunction
 ) => {
   const headers: string = req?.headers.authorization || ''
-  console.log(req?.headers.authorization)
   const authToken = headers?.split(' ')[1]
   if (!authToken || authToken === undefined)
     return generateError(res, 500, 'Unauthorized request')
   try {
-    console.log({ authToken })
     const decoded = jwt.verify(
       authToken,
       process.env.JWT_SECRECT || ''

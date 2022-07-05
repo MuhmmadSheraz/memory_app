@@ -234,7 +234,9 @@ const CreateMemory = () => {
           <button
             disabled={mutation.isLoading}
             type="submit"
-            className="cursor-pointer flex justify-center items-center w-[65%] sm:w-[50%] md:w-[20%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm"
+            className={`cursor-pointer flex justify-center items-center w-[65%] sm:w-[50%] md:w-[20%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm ${
+              mutation?.isLoading && 'cursor-not-allowed'
+            }`}
           >
             {mutation.isLoading ? (
               <>
@@ -247,11 +249,10 @@ const CreateMemory = () => {
                 />
               </>
             ) : location.state?.editable ? (
-              'Edit'
+              'Edit Memory'
             ) : (
-              'Create'
+              'Create Memory'
             )}{' '}
-            Memory
           </button>
         </form>
       </div>

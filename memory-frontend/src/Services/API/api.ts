@@ -139,6 +139,19 @@ const updateMemory = async (memory: Memory) => {
     },
   })
 }
+const getAllBookmarkMemories = async (ids: string[]) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+  return await Instance({
+    method: 'GET',
+    url: `/api/bookmark-memories/${ids}`,
+    withCredentials: true,
+    data: { ids },
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
+
 export {
   onSignUp,
   onSignIn,
@@ -152,4 +165,5 @@ export {
   searchMemory,
   addBookmark,
   updateMemory,
+  getAllBookmarkMemories,
 }

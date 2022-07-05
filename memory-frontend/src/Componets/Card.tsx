@@ -23,7 +23,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log({ userData })
     data?.likes.find((like: string) =>
       like == userData?.user?._id ? setIsLiked(true) : null
     )
@@ -38,7 +37,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
   }
   const handleEditMemory = async (e: React.MouseEvent<SVGAElement>) => {
     e.stopPropagation()
-    console.log({ data })
     navigate(`/create`, {
       state: {
         editable: userData?.user?._id == data?.userId ? true : false,

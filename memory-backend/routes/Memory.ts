@@ -1,3 +1,4 @@
+import { getAllBookmarkMemories } from './../controller/Memory/GetBookmarkMemories'
 import { removeBookmark } from './../controller/Memory/removeBookmark'
 import { unLikeMemory } from './../controller/Memory/UnLikeMemory'
 import { likeMemory } from './../controller/Memory/LikeMemory'
@@ -18,6 +19,7 @@ memoryRoutes.route(`/private-memories`).get(protect, getAllPrivateMemories)
 memoryRoutes.get(`/memories/:id`, protect, getMemory)
 memoryRoutes.get(`/search-memories`, protect, searchMemory)
 memoryRoutes.get(`/memories-by-tag`, getMemoryByTag)
+memoryRoutes.get(`/bookmark-memories/:ids`, getAllBookmarkMemories)
 memoryRoutes.put(`/update-memory`, protect, updateMemory)
 memoryRoutes.post(`/create-memory`, protect, createMemory)
 memoryRoutes.post(`/like-memory`, protect, likeMemory)

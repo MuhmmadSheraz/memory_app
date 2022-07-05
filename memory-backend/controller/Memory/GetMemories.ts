@@ -68,7 +68,6 @@ export const getAllMemories = async (req: Request, res: Response) => {
     //   }
     //   data = await memories.find().skip(skipPage).limit(1);
     // }
-    console.log(req.query.tags)
     res.send({
       status: 'success',
       length: data?.length,
