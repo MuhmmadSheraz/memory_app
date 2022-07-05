@@ -9,7 +9,6 @@ import {
   likeMemory,
   removeBookmark,
   unLikeMemory,
-  updateMemory,
 } from '../Services/API/api'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
@@ -30,7 +29,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
       bookmark == data?._id ? setIsBookmarked(true) : null
     )
   }, [])
-  useEffect(() => handleRefetch(), [isBookmarked])
 
   const navigate = useNavigate()
   const handleShowDetail = () => {
@@ -83,6 +81,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
         const userCopy = { user: response.data.data, token: userData?.token }
         localStorage.setItem('user_Session', JSON.stringify(userCopy))
       }
+      handleRefetch()
     } catch (error) {
       const err = error as AxiosError
       console.log(err.message)

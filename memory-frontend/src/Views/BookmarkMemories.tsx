@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios'
+import { useEffect } from 'react'
 import { TailSpin } from 'react-loader-spinner'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
@@ -15,14 +16,19 @@ const BookmarkMemories = () => {
     return getAllBookmarkMemories(user?.myBookmarks)
   }
   const { data, isError, isLoading, error, refetch } = useQuery(
-    ['allMemories'],
+    ['bookmarkMemories'],
     getAllMemories,
     {
       refetchOnWindowFocus: false,
       refetchOnMount: true,
-      enabled: true,
+      enabled: false,
     }
   )
+  useEffect(() => {
+    console.log({ user })
+    refetch()
+  }, [])
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 pt-20 flex justify-center items-center">
@@ -47,9 +53,12 @@ const BookmarkMemories = () => {
     <>
       <div className="min-h-screen bg-gray-100 pt-20 w-[100vw]">
         <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-2 px-2 ">
-          {data?.data?.data?.map((memory: Memory) => (
-            <Card handleRefetch={refetch} key={memory._id} data={memory} />
-          ))}
+          {data?.data?.data?.map(
+            (memory: Memory) =>
+              user?.myBookmarks.includes(memory?._id) && (
+                <Card handleRefetch={refetch} key={memory._id} data={memory} />
+              )
+          )}
           {!data?.data?.data?.length && (
             <h2 className="text-center w-[98vw] flex justify-center items-center font-semibold text-2xl h-[85vh]">
               No Bookmarked Memory Added 😌
