@@ -44,8 +44,6 @@ const getAllPrivateMemories = async () => {
 }
 const getMemory = async (id: string) => {
   const authCred = JSON.parse(localStorage.getItem('user_Session')!)
-  console.log('called', authCred)
-  console.log(authCred.token)
   return await Instance({
     method: 'GET',
     url: `/api/memories/${id}`,

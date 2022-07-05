@@ -11,19 +11,27 @@ import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { InputTag } from '../Componets/InputTag'
 import useSession from '../Helper/useSession'
-import { getMemory, likeMemory, unLikeMemory } from '../Services/API/api'
+import {
+  addBookmark,
+  getMemory,
+  likeMemory,
+  removeBookmark,
+  unLikeMemory,
+} from '../Services/API/api'
 
 const MemoryDetail = () => {
   const navigate = useNavigate()
   let { id } = useParams()
   const [isLiked, setIsLiked] = useState<boolean>(false)
-  const [isBookmarked, setIsBookmarked] = useState<boolean | null>(null)
-  const { user } = useSession('user_Session', null)
+  const [isBookmarked, setIsBookmarked] = useState<boolean | null>(false)
+  const { user, token } = useSession('user_Session', null)
   useEffect(() => {
     data?.data?.data?.likes.find((like: string) =>
       like == user?._id ? setIsLiked(true) : null
     )
-    user?.myBookmarks?.includes(data?.data?.data?._id)
+    console.log(user?.myBookmarks)
+    console.log(user?.myBookmarks?.includes(id))
+    user?.myBookmarks?.includes(id)
       ? setIsBookmarked(true)
       : setIsBookmarked(false)
   }, [])
@@ -60,6 +68,29 @@ const MemoryDetail = () => {
       console.log(err.message)
     }
   }
+  const handleBookmarkAction = async (e: any) => {
+    e.stopPropagation()
+    const body = {
+      memoryId: data?.data?.data?._id,
+    }
+    try {
+      let response: any
+      if (isBookmarked) {
+        response = await removeBookmark(body)
+        const userCopy = { user: response?.data?.data, token: token }
+        localStorage.setItem('user_Session', JSON.stringify(userCopy))
+        response?.status == 200 && setIsBookmarked(false)
+      } else {
+        response = await addBookmark(body)
+        response?.status >= 200 && setIsBookmarked(true)
+        const userCopy = { user: response.data.data, token: token }
+        localStorage.setItem('user_Session', JSON.stringify(userCopy))
+      }
+    } catch (error) {
+      const err = error as AxiosError
+      console.log(err.message)
+    }
+  }
   return (
     <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2">
       <div className="w-full md:w-1/2">
@@ -80,7 +111,7 @@ const MemoryDetail = () => {
         <h3 className="text-base lg:text-lg mt-5 text-clip">
           {data?.data?.data?.description}
         </h3>
-        <p className="text-right">
+        <p className="text-right mt-4">
           {dayjs(data?.data?.data?.createdAt).format('ddd-MMM-YYYY')}
         </p>
         <div className="mt-5">
@@ -106,6 +137,7 @@ const MemoryDetail = () => {
           </div>
           <BsFillBookmarkFill
             size={24}
+            onClick={handleBookmarkAction}
             className={`${
               isBookmarked ? 'text-black' : 'text-gray-300'
             }  hover:text-black hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
