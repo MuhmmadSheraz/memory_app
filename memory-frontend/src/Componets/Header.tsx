@@ -55,7 +55,7 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
 
   return (
     <div
-      className={`z-20 flex justify-between items-center bg-white px-8 p-3 max-h-[20%] shadow-md fixed top-0 w-full    `}
+      className={`z-20 flex justify-between items-center  border-blue-500 border-b-2 bg-white px-8 p-3 max-h-[20%] shadow-md fixed top-0 w-full    `}
     >
       <div className="flex items-center space-x-4 ">
         {!showSidebar ? (

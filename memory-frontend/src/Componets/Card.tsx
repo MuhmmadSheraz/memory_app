@@ -95,7 +95,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
   return (
     <div
       onClick={handleShowDetail}
-      className="bg-white overflow-hidden  rounded-3xl shadow-md drop-shadow-sm transition-all ease-in-out duration-500 hover:-translate-y-1 cursor-pointer hover:shadow-gray-200 px-1"
+      className="bg-white overflow-hidden  hover:bg-blue-50 rounded-3xl shadow-md drop-shadow-sm transition-all ease-in-out duration-500 hover:-translate-y-1 cursor-pointer hover:shadow-gray-200 px-1"
     >
       {/* User Header */}
       <div className="my-3 mx-2  flex items-center justify-between">

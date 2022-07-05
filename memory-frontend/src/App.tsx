@@ -13,7 +13,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <MainRouter />
       <ToastContainer />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   )
 }
