@@ -17,14 +17,17 @@ const MemoryDetail = () => {
   const navigate = useNavigate()
   let { id } = useParams()
   const [isLiked, setIsLiked] = useState<boolean>(false)
+  const [isBookmarked, setIsBookmarked] = useState<boolean | null>(null)
   const { user } = useSession('user_Session', null)
   useEffect(() => {
     data?.data?.data?.likes.find((like: string) =>
       like == user?._id ? setIsLiked(true) : null
     )
+    user?.myBookmarks?.includes(data?.data?.data?._id)
+      ? setIsBookmarked(true)
+      : setIsBookmarked(false)
   }, [])
   const handleGetMemory = (id: string) => {
-    console.log('refetching...')
     return getMemory(id)
   }
   const { data, isLoading, refetch } = useQuery(['memories', id], () => {
@@ -37,7 +40,6 @@ const MemoryDetail = () => {
       </div>
     )
   }
-  console.log({ data })
   const handleLikeAction = async (e: any) => {
     e.stopPropagation()
     const body = {
@@ -104,7 +106,9 @@ const MemoryDetail = () => {
           </div>
           <BsFillBookmarkFill
             size={24}
-            className="text-gray-300 hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer"
+            className={`${
+              isBookmarked ? 'text-black' : 'text-gray-300'
+            }  hover:text-black hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
           />
         </div>
         {/* Add UI Comments later */}
