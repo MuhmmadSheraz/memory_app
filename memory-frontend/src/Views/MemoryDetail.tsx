@@ -135,12 +135,21 @@ const MemoryDetail = () => {
                 isLiked && 'text-red-500'
               }  hover:text-red-500 hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
             />
-            <div className="mx-2 my-3 text-sm lg:text-base">
-              <p>
-                Liked by
-                <span className="font-semibold"> Hamza and 254 others</span>
-              </p>
-            </div>
+            {data?.data?.data?.likes.length > 0 && (
+              <div className="mx-2 my-3 text-sm lg:text-base">
+                <p>
+                  Liked by
+                  <span className="font-semibold">
+                    {' '}
+                    {isLiked && 'You'}{' '}
+                    {isLiked
+                      ? `and ${data?.data?.data?.likes?.length - 1}`
+                      : data?.data?.data?.likes?.length}{' '}
+                    others.
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
           <BsFillBookmarkFill
             size={24}
