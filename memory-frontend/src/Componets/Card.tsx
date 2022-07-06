@@ -12,6 +12,8 @@ import {
 } from '../Services/API/api'
 import { AxiosError } from 'axios'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { showToast } from '../Helper/showToast'
 interface Props {
   data: Memory
   handleRefetch: () => void
@@ -22,18 +24,20 @@ export const Card = ({ data, handleRefetch }: Props) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
+    console.log({ data })
     data?.likes.find((like: string) =>
       like == userData?.user?._id ? setIsLiked(true) : null
     )
     userData?.user?.myBookmarks.find((bookmark: string) =>
       bookmark == data?._id ? setIsBookmarked(true) : null
     )
-  }, [])
+  }, [data])
 
   const navigate = useNavigate()
   const handleShowDetail = () => {
     navigate(`/memory/${data?._id}`)
   }
+
   const handleEditMemory = async (e: React.MouseEvent<SVGAElement>) => {
     e.stopPropagation()
     navigate(`/create`, {
@@ -51,6 +55,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
     try {
       if (data?.likes.includes(userData?.user?._id)) {
         const response = await unLikeMemory(body)
+
         response?.status >= 200 && setIsLiked(false)
         handleRefetch()
       } else {

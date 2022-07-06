@@ -27,7 +27,7 @@ const BookmarkMemories = () => {
   useEffect(() => {
     console.log({ user })
     refetch()
-  }, [])
+  }, [data?.data?.data])
 
   if (isLoading) {
     return (

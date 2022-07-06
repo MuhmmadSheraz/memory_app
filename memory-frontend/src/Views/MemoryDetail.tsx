@@ -25,22 +25,29 @@ const MemoryDetail = () => {
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isBookmarked, setIsBookmarked] = useState<boolean | null>(false)
   const { user, token } = useSession('user_Session', null)
-  useEffect(() => {
-    data?.data?.data?.likes.find((like: string) =>
-      like == user?._id ? setIsLiked(true) : null
-    )
-    console.log(user?.myBookmarks)
-    console.log(user?.myBookmarks?.includes(id))
-    user?.myBookmarks?.includes(id)
-      ? setIsBookmarked(true)
-      : setIsBookmarked(false)
-  }, [])
+
   const handleGetMemory = (id: string) => {
     return getMemory(id)
   }
-  const { data, isLoading, refetch } = useQuery(['memories', id], () => {
-    return handleGetMemory(id ? id : '')
-  })
+
+  const { data, isLoading, refetch } = useQuery(
+    ['memories', id],
+    () => handleGetMemory(!!id ? id : ''),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: true,
+      enabled: true,
+    }
+  )
+  useEffect(() => {
+    console.log(data?.data?.data)
+    data?.data?.data?.likes.find((like: string) =>
+      like == user?._id ? setIsLiked(true) : null
+    )
+    user?.myBookmarks?.includes(id)
+      ? setIsBookmarked(true)
+      : setIsBookmarked(false)
+  }, [data?.data?.data])
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-100 pt-20 flex justify-center items-center">

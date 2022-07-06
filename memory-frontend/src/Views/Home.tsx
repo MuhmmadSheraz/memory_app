@@ -25,7 +25,7 @@ const Home = () => {
     {
       refetchOnWindowFocus: false,
       refetchOnMount: true,
-      enabled: true,
+      enabled: false,
     }
   )
   if (isLoading) {
