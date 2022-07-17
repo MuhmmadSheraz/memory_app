@@ -31,7 +31,6 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
     }
   }, [searhSuggestions])
   useEffect(() => {
-    console.log(debounceSearch)
     handleSearchMemory()
   }, [debounceSearch])
   useEffect(() => {
@@ -41,7 +40,6 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
     try {
       setIsLoading(true)
       const response = await searchMemory(debounceSearch)
-      console.log(response?.data?.data)
       setSearchResults(response?.data?.data)
       setIsLoading(false)
     } catch (error) {

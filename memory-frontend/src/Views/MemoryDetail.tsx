@@ -1,14 +1,11 @@
 import { AxiosError } from 'axios'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import {
-  BsFillBookmarkFill,
-  BsHeartFill,
-  BsFillArrowLeftCircleFill,
-} from 'react-icons/bs'
+import { BsFillBookmarkFill, BsHeartFill } from 'react-icons/bs'
 import { TailSpin } from 'react-loader-spinner'
 import { useQuery } from 'react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import Comment from '../Componets/Comment'
 import { InputTag } from '../Componets/InputTag'
 import useSession from '../Helper/useSession'
 import {
@@ -18,14 +15,15 @@ import {
   removeBookmark,
   unLikeMemory,
 } from '../Services/API/api'
+import { demoComments } from '../todo'
 
 const MemoryDetail = () => {
-  const navigate = useNavigate()
   let { id } = useParams()
   const [isLiked, setIsLiked] = useState<boolean>(false)
   const [isBookmarked, setIsBookmarked] = useState<boolean | null>(false)
   const { user, token } = useSession('user_Session', null)
-
+  const [comment, setComment] = useState('')
+  const [allComments, setAllComments] = useState<any[]>(demoComments)
   const handleGetMemory = (id: string) => {
     return getMemory(id)
   }
@@ -40,7 +38,6 @@ const MemoryDetail = () => {
     }
   )
   useEffect(() => {
-    console.log(data?.data?.data)
     data?.data?.data?.likes.find((like: string) =>
       like == user?._id ? setIsLiked(true) : null
     )
@@ -98,20 +95,76 @@ const MemoryDetail = () => {
       console.log(err.message)
     }
   }
+  const handlePostComment = () => {
+    let commentBody = {
+      parentIds: null,
+      id: Math.floor(Math.random() * 200),
+      data: comment,
+      replies: [],
+    }
+    setAllComments([...allComments, commentBody])
+    setComment('')
+  }
+  const a = (parentIds: [number], replyBody: any) => {
+    // 1 id single reply
+    // 2 id single reply ==> reply
+
+    let commentIndex: any
+
+    console.log({ parentIds, replyBody })
+    const cloneComments = [...allComments]
+    // const commentIndex = cloneComments.findIndex(
+    //   (com: any) => com?.id == parentIds[0]
+    // )
+    let currentComment: any
+    for (let index = 0; index < parentIds.length; index++) {
+      // commentIndex = cloneComments.findIndex(
+      //   (com: any) => com?.id == parentIds[0]
+      // )
+    }
+    // console.log(cloneComments)
+    // console.log(cloneComments[commentIndex])
+    cloneComments[commentIndex].replies.unshift(replyBody)
+    setAllComments(cloneComments)
+  }
+  const handlePostReply = (parentIds: [number], replyBody: any) => {
+    let mainComment: any
+
+    const cloneComments = [...allComments]
+    for (let index = 0; index < parentIds.length; index++) {
+      let id = parentIds[index]
+      if (index == 0) {
+        mainComment = cloneComments.findIndex((com: any) => com?.id == id)
+        console.log(cloneComments[mainComment])
+        cloneComments[mainComment].replies.unshift(replyBody)
+        setAllComments(cloneComments)
+      } else if (index == 1) {
+        const targetReplyIndex = mainComment.findIndex(
+          (com: any) => com?.id == id
+        )
+        console.log(mainComment)
+        console.log(targetReplyIndex)
+        console.log(cloneComments[mainComment[targetReplyIndex]])
+        // mainComment.replies[index]
+      }
+    }
+
+    // 1 id single reply
+    // 2 id single reply ==> reply
+
+    // const commentIndex = cloneComments.findIndex(
+    //   (com: any) => com?.id == parentIds[0]
+    // )
+  }
   return (
-    <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2">
+    <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2 pb-4">
       <div className="w-full md:w-1/2">
         <img
           className="h-[50vh] md:min-h-screen w-full md:w-1/2 md:fixed top-0 left-0"
           src={data?.data?.data?.image.url || data?.data?.data?.image}
         />
-        <BsFillArrowLeftCircleFill
-          onClick={() => navigate(-1)}
-          className="hidden md:absolute  md:top-5 left-5 bg-transparent text-gray-100 cursor-pointer hover:text-black transition-all ease-in-out duration-100"
-          size={40}
-        />
       </div>
-      <div className="flex flex-col mt-4 md:mt-16 px-3 lg:px-5 w-full md:w-1/2  mb-2 ">
+      <div className="flex flex-col mt-4 md:mt-16 px-3 lg:px-5 w-full md:w-1/2  mb-2   ">
         <h1 className="text-3xl lg:text-4xl font-semibold text-center mt-5">
           {data?.data?.data?.title}
         </h1>
@@ -159,9 +212,38 @@ const MemoryDetail = () => {
             }  hover:text-black hover:scale-125 transition-all transform ease-out duration-200 cursor-pointer`}
           />
         </div>
-        {/* Add UI Comments later */}
-        <div className="mt-20 font-semibold text-center text-cyan-500">
-          <h1>Comments Comming Soon...</h1>
+        {/* Add UI Comments */}
+        <div className="mt-10 h-[100%] flex justify-center flex-col w-full">
+          <hr />
+          <h1 className="text-left text-2xl font-semibold  self-start my-4">
+            Comments
+          </h1>
+          {/* Comment Input */}
+          <div className="border-blue-400 border-2 w-5/6 rounded-lg flex flex-col min-h-[20px]">
+            <textarea
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              name="comment"
+              rows={3}
+              className=" outline-none w-full py-6 px-4 text-base scrollbar-hide"
+            />
+            <button
+              onClick={handlePostComment}
+              className="outline-none text-center text-white hover:bg-blue-600 text-lg py-2 px-2 items-center justify-center m-2 bg-blue-500  rounded flex  self-end w-1/4"
+            >
+              Post
+            </button>
+          </div>
+          <div className="mt-4 self-start w-full">
+            {allComments?.map((com) => (
+              // @ts-ignore
+              <Comment
+                key={com.id}
+                value={com}
+                handlePostReply={handlePostReply}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>

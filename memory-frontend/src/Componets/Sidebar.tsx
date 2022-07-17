@@ -12,7 +12,6 @@ export const Sidebar = ({ showSidebar, setShowSidebar }: Props) => {
     localStorage.removeItem('user_Session')
     navigate('/login')
   }
-  console.log(location)
   return (
     <div
       className={`z-20 h-screen  bg-white w-[100vh] sm:w-[75vhsi] md:w-[50vh] lg:w-[20vw] fixed top-0 left-0 shadow-lg border-r-2 border-gray-200 ${
