@@ -127,34 +127,30 @@ const MemoryDetail = () => {
     cloneComments[commentIndex].replies.unshift(replyBody)
     setAllComments(cloneComments)
   }
-  const handlePostReply = (parentIds: [number], replyBody: any) => {
-    let mainComment: any
-
+  const handlePostReply = (parentIds: Number[], replyBody: any) => {
+    console.log('Parent Length', parentIds)
     const cloneComments = [...allComments]
-    for (let index = 0; index < parentIds.length; index++) {
-      let id = parentIds[index]
-      if (index == 0) {
-        mainComment = cloneComments.findIndex((com: any) => com?.id == id)
-        console.log(cloneComments[mainComment])
-        cloneComments[mainComment].replies.unshift(replyBody)
-        setAllComments(cloneComments)
-      } else if (index == 1) {
-        const targetReplyIndex = mainComment.findIndex(
-          (com: any) => com?.id == id
-        )
-        console.log(mainComment)
-        console.log(targetReplyIndex)
-        console.log(cloneComments[mainComment[targetReplyIndex]])
-        // mainComment.replies[index]
-      }
+    let parentComment: any
+    let parentCommentId = parentIds[0]
+    parentComment = cloneComments.findIndex(
+      (com: any) => com?.id == parentCommentId
+    )
+
+    console.log(parentComment)
+    if (parentIds.length == 1) {
+      cloneComments[parentComment].replies.unshift(replyBody)
     }
-
-    // 1 id single reply
-    // 2 id single reply ==> reply
-
-    // const commentIndex = cloneComments.findIndex(
-    //   (com: any) => com?.id == parentIds[0]
-    // )
+    if (parentIds.length > 1) {
+      console.log('else', parentIds, parentComment)
+      let replyId: any = parentIds[1]
+      console.log(cloneComments[parentComment].replies, replyId)
+      const repIndex = cloneComments[parentComment].replies.findIndex(
+        (repI: any) => repI.id == replyId
+      )
+      console.log(cloneComments[parentComment].replies[repIndex], repIndex)
+      cloneComments[parentComment].replies[repIndex].replies.unshift(replyBody)
+    }
+    setAllComments(cloneComments)
   }
   return (
     <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2 pb-4">

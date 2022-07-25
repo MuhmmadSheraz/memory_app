@@ -13,15 +13,10 @@ interface CommentBody {
 const Comment = ({ value, handlePostReply }: Props) => {
   const [replyInput, setReplyInput] = useState<boolean>(false)
   const replyInputRef = useRef<any>()
-  useEffect(() => {
-    console.log('render')
-    console.log(value)
-  }, [])
 
   const handlReply = (text: string) => {
     const parentIds: number[] | null = value.parentIds || []
-    console.log(value.parentIds)
-    parentIds.unshift(value.id)
+    parentIds.push(value.id)
     let replyBody = {
       parentIds,
       id: Math.floor(Math.random() * 200),
@@ -29,7 +24,6 @@ const Comment = ({ value, handlePostReply }: Props) => {
       replies: [],
     }
     handlePostReply(parentIds, replyBody)
-    console.log({ value, parentIds })
   }
   return (
     <div className="flex justify-start  flex-row w-full mt-3 bg-cyan-200 p-2">
