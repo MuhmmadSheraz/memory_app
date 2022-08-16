@@ -1,3 +1,4 @@
+import { ReplyComment } from './../controller/Memory/ReplyComment'
 import { getAllBookmarkMemories } from './../controller/Memory/GetBookmarkMemories'
 import { removeBookmark } from './../controller/Memory/removeBookmark'
 import { unLikeMemory } from './../controller/Memory/UnLikeMemory'
@@ -13,6 +14,7 @@ import { deleteMemory } from '../controller/Memory/DeleteMemory'
 import { getMemoryByTag } from '../controller/Memory/GetMemoryByTags'
 import { searchMemory } from '../controller/Memory/SearchMemory'
 import { addBookmark } from '../controller/Memory/bookmark'
+import { AddComment } from '../controller/Memory/AddComment'
 const memoryRoutes = Router()
 memoryRoutes.route(`/memories`).get(protect, getAllMemories)
 memoryRoutes.route(`/private-memories`).get(protect, getAllPrivateMemories)
@@ -27,4 +29,6 @@ memoryRoutes.post(`/un-like-memory`, protect, unLikeMemory)
 memoryRoutes.post(`/addbookmark-memory`, protect, addBookmark)
 memoryRoutes.post(`/removeBookmark-memory`, protect, removeBookmark)
 memoryRoutes.delete(`/delete-memory/:id`, deleteMemory)
+memoryRoutes.put(`/add-comment/:id`, AddComment)
+memoryRoutes.put(`/reply-comment/:id`, ReplyComment)
 export default memoryRoutes

@@ -1,9 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-const currentDate = new Date()
-type MemoryImage = {
-  public_id: string
-  url: string
-}
+
 const memorySchema: Schema = new Schema({
   title: {
     type: String,
@@ -36,6 +32,22 @@ const memorySchema: Schema = new Schema({
   userId: {
     type: String,
     require: [true, 'user is required'],
+  },
+  comments: {
+    type: [
+      {
+        userName: String,
+        userId: String,
+        memoryId: String,
+        id: String,
+        data: String,
+        replies: [],
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
 })
 
