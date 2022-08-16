@@ -17,3 +17,11 @@ export type CreateMemoryBody = {
 export type LikeMemoryBody = {
   memoryId: string
 }
+export type CommentBody = {
+  userName: string
+  userId: string
+  memoryId: string
+  id: string
+  data: string
+  replies: []
+}

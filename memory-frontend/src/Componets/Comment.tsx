@@ -1,7 +1,9 @@
+import dayjs from 'dayjs'
 import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 interface Props {
   value: CommentBody
   handlePostReply: any
+  user: any
 }
 interface CommentBody {
   parentIds: [number] | null
@@ -9,8 +11,12 @@ interface CommentBody {
   data: string
   replies: [CommentBody]
   handlePostReply: any
+  createdAt: any
+  userName: string
 }
-const Comment = ({ value, handlePostReply }: Props) => {
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
+const Comment = ({ user, value, handlePostReply }: Props) => {
   const [replyInput, setReplyInput] = useState<boolean>(false)
   const replyInputRef = useRef<any>()
 
@@ -18,6 +24,8 @@ const Comment = ({ value, handlePostReply }: Props) => {
     const parentIds: number[] | null = value.parentIds || []
     parentIds.push(value.id)
     let replyBody = {
+      userName: user?.name,
+      userId: user?._id,
       parentIds,
       id: Math.floor(Math.random() * 200),
       data: text,
@@ -25,8 +33,12 @@ const Comment = ({ value, handlePostReply }: Props) => {
     }
     handlePostReply(parentIds, replyBody)
   }
+  console.log(dayjs(value?.createdAt).format('YYYY-MM-DD'))
   return (
-    <div className="flex justify-start  flex-row w-full mt-3 bg-cyan-200 p-2">
+    <div
+      className="flex justify-start  flex-row w-full mt-3 bg-cyan-200 p-2"
+      onClick={() => console.log({ value })}
+    >
       <img
         className="h-10 w-10 rounded-full mr-4"
         src={
@@ -37,8 +49,9 @@ const Comment = ({ value, handlePostReply }: Props) => {
       <div className="flex flex-col flex-wrap">
         {/* Name and time */}
         <div className="flex items-center justify-start">
-          <p className="mr-2 font-semibold text-lg">Muhammad Shiraz</p>
-          <p> 11 Minutes ago</p>
+          <p className="mr-2 font-semibold text-lg">{value?.userName}</p>
+          {/* @ts-ignore */}
+          <p>{dayjs(value?.createdAt).fromNow()}</p>
         </div>
         {/* Comment */}
         <div className="max-w-full ">{value?.data}</div>
@@ -72,10 +85,11 @@ const Comment = ({ value, handlePostReply }: Props) => {
           />
         )}
         <>
-          {value.replies.length > 0 &&
+          {value?.replies?.length > 0 &&
             value?.replies?.map(
               (reply) => (
                 <Comment
+                  user={user}
                   key={reply.id}
                   value={reply}
                   handlePostReply={handlePostReply}

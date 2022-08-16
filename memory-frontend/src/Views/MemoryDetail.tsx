@@ -8,14 +8,19 @@ import { useParams } from 'react-router-dom'
 import Comment from '../Componets/Comment'
 import { InputTag } from '../Componets/InputTag'
 import useSession from '../Helper/useSession'
+import { v4 as uuidv4 } from 'uuid'
 import {
   addBookmark,
+  addComment,
+  addReply,
   getMemory,
   likeMemory,
   removeBookmark,
   unLikeMemory,
 } from '../Services/API/api'
-import { demoComments } from '../todo'
+import { toast } from 'react-toastify'
+
+import { CommentBody } from '../Types/Memory'
 
 const MemoryDetail = () => {
   let { id } = useParams()
@@ -23,7 +28,7 @@ const MemoryDetail = () => {
   const [isBookmarked, setIsBookmarked] = useState<boolean | null>(false)
   const { user, token } = useSession('user_Session', null)
   const [comment, setComment] = useState('')
-  const [allComments, setAllComments] = useState<any[]>(demoComments)
+  const [allComments, setAllComments] = useState<any[]>([])
   const handleGetMemory = (id: string) => {
     return getMemory(id)
   }
@@ -44,6 +49,7 @@ const MemoryDetail = () => {
     user?.myBookmarks?.includes(id)
       ? setIsBookmarked(true)
       : setIsBookmarked(false)
+    setAllComments(data?.data?.data?.comments)
   }, [data?.data?.data])
   if (isLoading) {
     return (
@@ -69,7 +75,6 @@ const MemoryDetail = () => {
       }
     } catch (error) {
       const err = error as AxiosError
-      console.log(err.message)
     }
   }
   const handleBookmarkAction = async (e: any) => {
@@ -92,43 +97,46 @@ const MemoryDetail = () => {
       }
     } catch (error) {
       const err = error as AxiosError
-      console.log(err.message)
+      toast.error(err.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
   }
-  const handlePostComment = () => {
-    let commentBody = {
-      parentIds: null,
-      id: Math.floor(Math.random() * 200),
+  const handlePostComment = async () => {
+    let commentBody: CommentBody = {
+      userName: user?.name,
+      userId: user?._id,
+      memoryId: data?.data?.data?._id,
+      id: uuidv4(),
       data: comment,
       replies: [],
     }
-    setAllComments([...allComments, commentBody])
-    setComment('')
-  }
-  const a = (parentIds: [number], replyBody: any) => {
-    // 1 id single reply
-    // 2 id single reply ==> reply
-
-    let commentIndex: any
-
-    console.log({ parentIds, replyBody })
-    const cloneComments = [...allComments]
-    // const commentIndex = cloneComments.findIndex(
-    //   (com: any) => com?.id == parentIds[0]
-    // )
-    let currentComment: any
-    for (let index = 0; index < parentIds.length; index++) {
-      // commentIndex = cloneComments.findIndex(
-      //   (com: any) => com?.id == parentIds[0]
-      // )
+    let allCom = [...allComments]
+    allCom.unshift(commentBody)
+    try {
+      const response = await addComment(commentBody)
+      response?.status == 200 && setAllComments(allCom)
+      response?.status == 200 && setComment('')
+    } catch (error: any) {
+      toast.error(error.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
-    // console.log(cloneComments)
-    // console.log(cloneComments[commentIndex])
-    cloneComments[commentIndex].replies.unshift(replyBody)
-    setAllComments(cloneComments)
   }
-  const handlePostReply = (parentIds: Number[], replyBody: any) => {
-    console.log('Parent Length', parentIds)
+
+  const handlePostReply = async (parentIds: Number[], replyBody: any) => {
     const cloneComments = [...allComments]
     let parentComment: any
     let parentCommentId = parentIds[0]
@@ -136,20 +144,31 @@ const MemoryDetail = () => {
       (com: any) => com?.id == parentCommentId
     )
 
-    console.log(parentComment)
     if (parentIds.length == 1) {
       cloneComments[parentComment].replies.unshift(replyBody)
     }
     if (parentIds.length > 1) {
-      console.log('else', parentIds, parentComment)
       let replyId: any = parentIds[1]
-      console.log(cloneComments[parentComment].replies, replyId)
       const repIndex = cloneComments[parentComment].replies.findIndex(
         (repI: any) => repI.id == replyId
       )
-      console.log(cloneComments[parentComment].replies[repIndex], repIndex)
       cloneComments[parentComment].replies[repIndex].replies.unshift(replyBody)
     }
+    try {
+      const response = await addReply(cloneComments[parentComment])
+    } catch (error) {
+      const err = error as AxiosError
+      toast.error(err.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
+
     setAllComments(cloneComments)
   }
   return (
@@ -231,9 +250,10 @@ const MemoryDetail = () => {
             </button>
           </div>
           <div className="mt-4 self-start w-full">
-            {allComments?.map((com) => (
+            {allComments?.map((com: any) => (
               // @ts-ignore
               <Comment
+                user={user}
                 key={com.id}
                 value={com}
                 handlePostReply={handlePostReply}

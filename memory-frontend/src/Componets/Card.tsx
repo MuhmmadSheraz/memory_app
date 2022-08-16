@@ -24,7 +24,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log({ data })
     data?.likes.find((like: string) =>
       like == userData?.user?._id ? setIsLiked(true) : null
     )
@@ -65,7 +64,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
       }
     } catch (error) {
       const err = error as AxiosError
-      console.log(err.message)
     }
   }
   const handleBookmark = async (e: any) => {
@@ -89,7 +87,6 @@ export const Card = ({ data, handleRefetch }: Props) => {
       handleRefetch()
     } catch (error) {
       const err = error as AxiosError
-      console.log(err.message)
     }
   }
 

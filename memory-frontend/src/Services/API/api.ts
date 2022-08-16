@@ -1,4 +1,4 @@
-import { CreateMemoryBody, LikeMemoryBody, Memory } from './../../Types/Memory'
+import { CommentBody, LikeMemoryBody, Memory } from './../../Types/Memory'
 import { SignInUser, SignUpUser } from './../../Types/Auth'
 import Instance from './Instance'
 
@@ -149,7 +149,33 @@ const getAllBookmarkMemories = async (ids: string[]) => {
     },
   })
 }
+const addComment = async (body: CommentBody) => {
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
 
+  return await Instance({
+    method: 'PUT',
+    url: `/api/add-comment/${body?.memoryId}`,
+    withCredentials: true,
+    data: body,
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
+const addReply = async (body: CommentBody) => {
+  console.log('API CALLED', body)
+  const authCred = JSON.parse(localStorage.getItem('user_Session')!)
+
+  return await Instance({
+    method: 'PUT',
+    url: `/api/reply-comment/${body?.memoryId}`,
+    withCredentials: true,
+    data: body,
+    headers: {
+      authorization: `Bearer ${authCred?.token}`,
+    },
+  })
+}
 export {
   onSignUp,
   onSignIn,
@@ -163,5 +189,7 @@ export {
   searchMemory,
   addBookmark,
   updateMemory,
+  addComment,
+  addReply,
   getAllBookmarkMemories,
 }
