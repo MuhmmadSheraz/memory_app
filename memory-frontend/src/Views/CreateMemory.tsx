@@ -9,7 +9,6 @@ import { TailSpin } from 'react-loader-spinner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
-import useSession from '../Helper/useSession'
 
 type Inputs = {
   title: string
@@ -45,6 +44,7 @@ const CreateMemory = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
@@ -58,6 +58,7 @@ const CreateMemory = () => {
   const [tags, setTags] = useState<string[]>(
     location.state?.editable ? location.state?.data?.tags : []
   )
+  const [selectedImage, setSelectedImage] = useState<any>(null)
   const mutation = useMutation(
     async (formData: FormData | any) => {
       return await createMemory(formData)
@@ -151,6 +152,9 @@ const CreateMemory = () => {
     const newTags = tags.filter((tag) => tag !== tagName)
     setTags(newTags)
   }
+  console.log(getValues())
+  const memoryImage = { ...register('memImage', { required: true }) }
+
   return (
     <div>
       <div className="mt-16 pt-5 flex h-full justify-center min-w-[100vw] items-center flex-col px-5 bg-gray-100 min-h-[90vh]">
@@ -183,7 +187,7 @@ const CreateMemory = () => {
           )}
           <input
             onKeyUp={handleOnChange}
-            placeholder="Enter Tags"
+            placeholder="Enter Tag (Press Space to add Tag)"
             className="block w-full sm:w-3/4 md:w-1/2  py-2  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm"
           />
           {tags.length > 0 && (
@@ -196,20 +200,19 @@ const CreateMemory = () => {
 
           <div className="block w-full sm:w-3/4 md:w-1/2  py-2 relative bg-white  outline-gray-400 border-gray-200 border-2 my-2 px-3 rounded-lg text-lg shadow-sm">
             <input
-              {...register('memImage', { required: true })}
               type="file"
               accept="image/x-png,image/jpeg,image/jpg"
+              onChange={(e: any) => {
+                memoryImage.onChange(e)
+                console.log(e.target.files[0])
+                setSelectedImage(e.target.files[0])
+              }}
               className="block w-full"
             />
 
             <img
               className="w-8 h-8 absolute right-2 top-[10px] hidden sm:block cursor-pointer"
-              src={
-                location.state?.editable
-                  ? location.state?.data?.image?.url ||
-                    location.state?.data?.image
-                  : 'https://cdn.dribbble.com/users/443570/screenshots/5276693/therapist.jpg?compress=1&resize=800x600&vertical=top'
-              }
+              src={selectedImage && URL?.createObjectURL(selectedImage)}
             />
           </div>
           {errors.memImage && (
