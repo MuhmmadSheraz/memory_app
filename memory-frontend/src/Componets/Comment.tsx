@@ -36,7 +36,7 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
   console.log(dayjs(value?.createdAt).format('YYYY-MM-DD'))
   return (
     <div
-      className="flex justify-start  flex-row w-full mt-3 bg-cyan-200 p-2"
+      className="flex justify-start  flex-row w-full p-2 rounded-md my-2 border-black"
       onClick={() => console.log({ value })}
     >
       <img
@@ -46,7 +46,7 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
         }
       />
       {/*Content*/}
-      <div className="flex flex-col flex-wrap">
+      <div className="flex flex-col flex-wrap w-full">
         {/* Name and time */}
         <div className="flex items-center justify-start">
           <p className="mr-2 font-semibold text-lg">{value?.userName}</p>
@@ -54,7 +54,7 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
           <p>{dayjs(value?.createdAt).fromNow()}</p>
         </div>
         {/* Comment */}
-        <div className="max-w-full ">{value?.data}</div>
+        <div className="max-w-full text-lg ">{value?.data}</div>
         <button
           onClick={() => {
             if (replyInput) {
@@ -73,7 +73,7 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
         {replyInput && (
           <textarea
             ref={replyInputRef}
-            onKeyDown={(e: KeyboardEvent<HTMLElement>) => {
+            onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
               if (e.key == 'Enter') {
                 setReplyInput(false)
                 // @ts-ignore
@@ -81,10 +81,10 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
               }
             }}
             placeholder="Enter your reply"
-            className="bg-blue-50 w-full text-gray-600 p-2 rounded-md outline-none focus:border-2 focus:border-blue-300"
+            className="bg-white w-full text-gray-600 p-2 my-2 rounded-md outline-none focus:border-2 focus:border-blue-300"
           />
         )}
-        <>
+        <div className="w-full border-l-4">
           {value?.replies?.length > 0 &&
             value?.replies?.map(
               (reply) => (
@@ -97,7 +97,7 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
               )
               // console.log({ reply })
             )}
-        </>
+        </div>
       </div>
     </div>
   )

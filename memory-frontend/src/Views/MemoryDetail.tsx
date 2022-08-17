@@ -234,13 +234,13 @@ const MemoryDetail = () => {
             Comments
           </h1>
           {/* Comment Input */}
-          <div className="border-blue-400 border-2 w-5/6 rounded-lg flex flex-col min-h-[20px]">
+          <div className="border-blue-400 border-4 w-5/6 rounded-lg flex flex-col min-h-[20px]">
             <textarea
               onChange={(e) => setComment(e.target.value)}
               value={comment}
               name="comment"
               rows={3}
-              className=" outline-none w-full py-6 px-4 text-base scrollbar-hide"
+              className=" outline-none w-full py-6 px-4  scrollbar-hide text-xl"
             />
             <button
               onClick={handlePostComment}
@@ -249,9 +249,8 @@ const MemoryDetail = () => {
               Post
             </button>
           </div>
-          <div className="mt-4 self-start w-full">
+          <div className="mt-4 self-start w-full bg-blue-50  p-4 rounded-md max-h-[60vh] overflow-y-auto">
             {allComments?.map((com: any) => (
-              // @ts-ignore
               <Comment
                 user={user}
                 key={com.id}
