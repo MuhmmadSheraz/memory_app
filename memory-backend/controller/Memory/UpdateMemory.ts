@@ -24,6 +24,7 @@ export const updateMemory = async (req: Request, res: Response) => {
         {
           folder: 'memories',
           public_id: body.public_id,
+          secure: true,
         },
         function (error: any, result: any) {
           if (error) {

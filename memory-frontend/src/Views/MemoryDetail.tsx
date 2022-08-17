@@ -43,6 +43,7 @@ const MemoryDetail = () => {
     }
   )
   useEffect(() => {
+    console.log(data?.data.data)
     data?.data?.data?.likes.find((like: string) =>
       like == user?._id ? setIsLiked(true) : null
     )
@@ -75,6 +76,15 @@ const MemoryDetail = () => {
       }
     } catch (error) {
       const err = error as AxiosError
+      toast.error(err.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
   }
   const handleBookmarkAction = async (e: any) => {
@@ -155,7 +165,7 @@ const MemoryDetail = () => {
       cloneComments[parentComment].replies[repIndex].replies.unshift(replyBody)
     }
     try {
-      const response = await addReply(cloneComments[parentComment])
+      await addReply(cloneComments[parentComment])
     } catch (error) {
       const err = error as AxiosError
       toast.error(err.message, {
@@ -175,7 +185,7 @@ const MemoryDetail = () => {
     <div className="flex  flex-col md:flex-row mt-[2p] xmd:mt-2 pb-4">
       <div className="w-full md:w-1/2">
         <img
-          className="h-[50vh] md:min-h-screen w-full md:w-1/2 md:fixed top-0 left-0"
+          className="h-[50vh] md:min-h-screen w-full md:w-1/2 md:fixed top-0 left-0 object-cover"
           src={data?.data?.data?.image.url || data?.data?.data?.image}
         />
       </div>
@@ -249,16 +259,18 @@ const MemoryDetail = () => {
               Post
             </button>
           </div>
-          <div className="mt-4 self-start w-full bg-blue-50  p-4 rounded-md max-h-[60vh] overflow-y-auto">
-            {allComments?.map((com: any) => (
-              <Comment
-                user={user}
-                key={com.id}
-                value={com}
-                handlePostReply={handlePostReply}
-              />
-            ))}
-          </div>
+          {!!allComments?.length && (
+            <div className="mt-4 self-start w-full bg-blue-50  p-4 rounded-md max-h-[60vh] overflow-y-auto">
+              {allComments?.map((com: any) => (
+                <Comment
+                  user={user}
+                  key={com.id}
+                  value={com}
+                  handlePostReply={handlePostReply}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { Header } from '../Componets/Header'
 import { Sidebar } from '../Componets/Sidebar'
 import useSession from '../Helper/useSession'
 
-export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const user = useSession('user_Session', null)
   const [showSidebar, setShowSidebar] = useState<boolean>(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -34,3 +34,4 @@ export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     )
   }
 }
+export default ProtectedRoute

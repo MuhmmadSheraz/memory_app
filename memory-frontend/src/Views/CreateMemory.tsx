@@ -41,7 +41,6 @@ const schema = yup
 const CreateMemory = () => {
   const navigate = useNavigate()
   const location: Location = useLocation()
-  const userData = useSession('user_Session', null)
   console.log({ location })
   const {
     register,

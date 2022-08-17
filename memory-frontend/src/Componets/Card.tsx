@@ -105,7 +105,7 @@ export const Card = ({ data, handleRefetch }: Props) => {
           <div className="ml-2 text-sm">
             <h2 className="font-semibold">{data?.title}</h2>
             <h3 className="text-gray-500">
-              {dayjs(data?.createdAt).format('ddd-MMM-YYYY')}
+              {dayjs(data?.createdAt).format('DD-MMM-YYYY')}
             </h3>
           </div>
         </div>

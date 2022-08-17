@@ -1,4 +1,4 @@
-import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import * as yup from 'yup'
@@ -11,7 +11,7 @@ import { AxiosError } from 'axios'
 import { SignUpUser } from '../Types/Auth'
 import { Link, useNavigate } from 'react-router-dom'
 import useSession from '../Helper/useSession'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import MemoryBackground from '../Assets/Images/mem.jpg'
 
 type Inputs = {
