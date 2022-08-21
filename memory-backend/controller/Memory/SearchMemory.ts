@@ -1,5 +1,6 @@
 import { memories } from './../../model/memory'
 import { Request, Response } from 'express'
+import { generateError } from '../../helper/generateError'
 export const searchMemory = async (req: Request, res: Response) => {
   try {
     const searchTerm: any = req?.query?.searchText || ''
@@ -12,9 +13,6 @@ export const searchMemory = async (req: Request, res: Response) => {
       data,
     })
   } catch (error: any) {
-    res.send({
-      status: 500,
-      message: error?.message,
-    })
+    return generateError(res, 500, error.message)
   }
 }

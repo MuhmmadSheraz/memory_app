@@ -2,6 +2,7 @@ import { memories } from './../../model/memory'
 import { Request, Response } from 'express'
 import { tokenDecoder } from '../../helper/tokenDecoder'
 import cloudinary from 'cloudinary'
+import { generateError } from '../../helper/generateError'
 export const updateMemory = async (req: Request, res: Response) => {
   const { params, body, headers } = req
   console.log('body***', body)
@@ -28,10 +29,7 @@ export const updateMemory = async (req: Request, res: Response) => {
         },
         function (error: any, result: any) {
           if (error) {
-            res.send({
-              status: 500,
-              message: error?.message,
-            })
+            return generateError(res, 500, error.message)
           } else {
             console.log('result***', result)
             tempMemory.image = {
@@ -52,9 +50,6 @@ export const updateMemory = async (req: Request, res: Response) => {
       })
     }
   } catch (error: any) {
-    res.send({
-      status: 500,
-      message: error?.message,
-    })
+    return generateError(res, 500, error.message)
   }
 }

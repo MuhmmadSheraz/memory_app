@@ -24,6 +24,6 @@ export const ReplyComment = async (req: Request, res: Response) => {
       data,
     })
   } catch (error: any) {
-    return generateError(res, 500, error)
+    return generateError(res, 500, error.message)
   }
 }

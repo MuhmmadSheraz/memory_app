@@ -1,5 +1,6 @@
 import { memories } from './../../model/memory'
 import { Request, Response } from 'express'
+import { generateError } from '../../helper/generateError'
 export const getAllBookmarkMemories = async (req: Request, res: Response) => {
   const { params } = req
   try {
@@ -16,9 +17,6 @@ export const getAllBookmarkMemories = async (req: Request, res: Response) => {
       data: data,
     })
   } catch (error: any) {
-    res.send({
-      status: 500,
-      message: error?.message,
-    })
+    return generateError(res, 500, error.message)
   }
 }

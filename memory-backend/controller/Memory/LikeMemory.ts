@@ -21,9 +21,6 @@ export const likeMemory = async (req: Request, res: Response) => {
       data,
     })
   } catch (error: any) {
-    res.send({
-      status: 500,
-      message: error?.message,
-    })
+    return generateError(res, 500, error.message)
   }
 }

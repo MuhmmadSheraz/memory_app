@@ -2,6 +2,7 @@ import { tokenDecoder } from './../../helper/tokenDecoder'
 import { memories } from './../../model/memory'
 import { Response, Request } from 'express'
 import cloudinary from 'cloudinary'
+import { generateError } from '../../helper/generateError'
 export const createMemory = async (req: Request, res: Response) => {
   cloudinary.v2.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -47,9 +48,6 @@ export const createMemory = async (req: Request, res: Response) => {
     })
   } catch (error: any) {
     console.log('error', error.message)
-    res.send({
-      status: 500,
-      message: error?.message,
-    })
+    return generateError(res, 500, error.message)
   }
 }
