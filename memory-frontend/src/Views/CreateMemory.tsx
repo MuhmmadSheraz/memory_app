@@ -2,13 +2,14 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { InputTag } from '../Componets/InputTag'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-query'
 import { createMemory, updateMemory } from '../Services/API/api'
 import { TailSpin } from 'react-loader-spinner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
+import { Memory } from '../Types/Memory'
 
 type Inputs = {
   title: string
@@ -16,6 +17,7 @@ type Inputs = {
   memImage: string
   isPublic: boolean
 }
+
 type Location = {
   hash: string
   key: string
@@ -23,6 +25,10 @@ type Location = {
   search: string
   state?: any
 }
+interface UpdatedForm extends Memory {
+  _id: string
+}
+
 const schema = yup
   .object({
     title: yup.string().required(),
@@ -31,7 +37,8 @@ const schema = yup
       .mixed()
       .required()
       .test('fileSize', 'Please provide image', (value) => {
-        if (!value.length) return false
+        console.log(value[0])
+        if (!value?.length) return false
         return value[0].size <= 2000000
       }),
     isPublic: yup.boolean(),
@@ -50,17 +57,17 @@ const CreateMemory = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       title: location?.state?.data?.title,
-      description: location?.state?.data?.title,
-      memImage: location?.state?.data?.title,
-      isPublic: location?.state?.data?.title,
+      description: location?.state?.data?.description,
+      memImage: location?.state?.data?.image.data?.url,
+      isPublic: location?.state?.data?.isPublic,
     },
   })
   const [tags, setTags] = useState<string[]>(
     location.state?.editable ? location.state?.data?.tags : []
   )
-  const [selectedImage, setSelectedImage] = useState<any>(null)
+  const [selectedImage, setSelectedImage] = useState<Blob | MediaSource>()
   const mutation = useMutation(
-    async (formData: FormData | any) => {
+    async (formData: FormData) => {
       return await createMemory(formData)
     },
     {
@@ -93,7 +100,8 @@ const CreateMemory = () => {
     }
   )
   const updateMemoryMutation = useMutation(
-    async (formData: FormData | any) => {
+    async (formData: UpdatedForm & FormData) => {
+      console.log(formData)
       return await updateMemory(formData)
     },
     {
@@ -135,6 +143,7 @@ const CreateMemory = () => {
     if (location.state?.editable) {
       formData?.append('_id', location.state?.data?._id)
       formData?.append('public_id', location.state?.data?.image?.public_id)
+      // @ts-ignore
       updateMemoryMutation.mutateAsync(formData)
     } else {
       mutation.mutateAsync(formData)
@@ -153,8 +162,6 @@ const CreateMemory = () => {
     setTags(newTags)
   }
   console.log(getValues())
-  const memoryImage = { ...register('memImage', { required: true }) }
-
   return (
     <div>
       <div className="mt-16 pt-5 flex h-full justify-center min-w-[100vw] items-center flex-col px-5 bg-gray-100 min-h-[90vh]">
@@ -202,17 +209,18 @@ const CreateMemory = () => {
             <input
               type="file"
               accept="image/x-png,image/jpeg,image/jpg"
-              onChange={(e: any) => {
-                memoryImage.onChange(e)
-                console.log(e.target.files[0])
-                setSelectedImage(e.target.files[0])
-              }}
+              {...register('memImage', { required: true })}
+              name="memImage"
               className="block w-full"
             />
 
             <img
               className="w-8 h-8 absolute right-2 top-[10px] hidden sm:block cursor-pointer"
-              src={selectedImage && URL?.createObjectURL(selectedImage)}
+              src={
+                selectedImage
+                  ? URL?.createObjectURL(selectedImage)
+                  : location.state.data.image.url
+              }
             />
           </div>
           {errors.memImage && (
@@ -234,13 +242,14 @@ const CreateMemory = () => {
             </label>
           </div>
           <button
-            disabled={mutation.isLoading}
+            disabled={mutation.isLoading || updateMemoryMutation.isLoading}
             type="submit"
             className={`cursor-pointer flex justify-center items-center w-[65%] sm:w-[50%] md:w-[20%] py-2  bg-blue-500 text-white hover:bg-blue-600 hover:drop-shadow-sm my-2 px-3 rounded-lg text-lg shadow-sm ${
-              mutation?.isLoading && 'cursor-not-allowed'
+              mutation.isLoading ||
+              (updateMemoryMutation.isLoading && 'cursor-not-allowed')
             }`}
           >
-            {mutation.isLoading ? (
+            {mutation.isLoading || updateMemoryMutation.isLoading ? (
               <>
                 <span className="mr-4">Loading</span>
                 <TailSpin
@@ -251,7 +260,7 @@ const CreateMemory = () => {
                 />
               </>
             ) : location.state?.editable ? (
-              'Edit Memory'
+              'Update Memory'
             ) : (
               'Create Memory'
             )}{' '}

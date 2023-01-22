@@ -10,7 +10,7 @@ import {
   removeBookmark,
   unLikeMemory,
 } from '../Services/API/api'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { showToast } from '../Helper/showToast'
@@ -64,15 +64,25 @@ export const Card = ({ data, handleRefetch }: Props) => {
       }
     } catch (error) {
       const err = error as AxiosError
+      toast(err.message, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        type: 'error',
+      })
     }
   }
-  const handleBookmark = async (e: any) => {
+  const handleBookmark = async (e: React.MouseEvent<any>) => {
     e.stopPropagation()
     const body = {
       memoryId: data?._id,
     }
     try {
-      let response: any
+      let response: AxiosResponse
       if (userData?.user?.myBookmarks.includes(data?._id)) {
         response = await removeBookmark(body)
         const userCopy = { user: response?.data?.data, token: userData?.token }
@@ -87,6 +97,16 @@ export const Card = ({ data, handleRefetch }: Props) => {
       handleRefetch()
     } catch (error) {
       const err = error as AxiosError
+      toast(err.message, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        type: 'error',
+      })
     }
   }
 

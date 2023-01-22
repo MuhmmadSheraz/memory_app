@@ -1,4 +1,4 @@
-export default function useSession(key: any, defaultValue: null) {
+export default function useSession(key: string, defaultValue: null) {
   const stored = localStorage.getItem(key)
   if (!stored) {
     return defaultValue

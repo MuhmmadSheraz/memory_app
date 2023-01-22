@@ -244,13 +244,13 @@ const MemoryDetail = () => {
             Comments
           </h1>
           {/* Comment Input */}
-          <div className="border-blue-400 border-4 w-5/6 rounded-lg flex flex-col min-h-[20px]">
+          <div className="border-blue-400 shadow-md border-4 w-full rounded-lg flex flex-col min-h-[20px]">
             <textarea
               onChange={(e) => setComment(e.target.value)}
               value={comment}
               name="comment"
-              rows={3}
-              className=" outline-none w-full py-6 px-4  scrollbar-hide text-xl"
+              rows={1}
+              className="  outline-none w-full py-6 px-4  scrollbar-hide text-xl"
             />
             <button
               onClick={handlePostComment}

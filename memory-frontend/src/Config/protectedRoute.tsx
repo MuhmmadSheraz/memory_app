@@ -10,7 +10,8 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const ref = useRef<HTMLDivElement>(null)
   // Outside Click Detection
   useEffect(() => {
-    const checkIfClickedOutside = (e: React.MouseEvent | any) => {
+    const checkIfClickedOutside = (e: EventListener | MouseEvent) => {
+      // @ts-ignore
       if (showSidebar && ref.current && ref.current.contains(e.target)) {
         setShowSidebar(false)
       }

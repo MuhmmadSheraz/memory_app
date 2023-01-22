@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { BiMenu, BiSearch } from 'react-icons/bi'
 import { CgClose } from 'react-icons/cg'
 import { Link } from 'react-router-dom'
@@ -20,7 +26,8 @@ export const Header = ({ showSidebar, setShowSidebar }: Props) => {
   const ref = useRef<HTMLInputElement>(null)
   // Outside Click Detection
   useEffect(() => {
-    const checkIfClickedOutside = (e: React.MouseEvent | any) => {
+    const checkIfClickedOutside = (e: MouseEvent) => {
+      // @ts-ignore
       if (searhSuggestions && ref.current && !ref.current.contains(e.target)) {
         setSearchSuggestion(false)
       }

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, useRef, useState } from 'react'
 interface Props {
   value: CommentBody
   handlePostReply: any
@@ -17,6 +17,7 @@ interface CommentBody {
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime)
 const Comment = ({ user, value, handlePostReply }: Props) => {
+  const date = value?.createdAt ? new Date(value.createdAt) : new Date()
   const [replyInput, setReplyInput] = useState<boolean>(false)
   const replyInputRef = useRef<any>()
 
@@ -33,7 +34,9 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
     }
     handlePostReply(parentIds, replyBody)
   }
-  console.log(dayjs(value?.createdAt).format('YYYY-MM-DD'))
+
+  //@ts-ignore
+  console.log(value.createdAt)
   return (
     <div
       className="flex justify-start  flex-row w-full p-2 rounded-md my-2 border-black"
@@ -51,7 +54,7 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
         <div className="flex items-center justify-start">
           <p className="mr-2 font-semibold text-lg">{value?.userName}</p>
           {/* @ts-ignore */}
-          <p>{dayjs(value?.createdAt).fromNow()}</p>
+          <p>{dayjs(date).fromNow()}</p>
         </div>
         {/* Comment */}
         <div className="max-w-full text-lg ">{value?.data}</div>
@@ -86,17 +89,14 @@ const Comment = ({ user, value, handlePostReply }: Props) => {
         )}
         <div className="w-full border-l-4">
           {value?.replies?.length > 0 &&
-            value?.replies?.map(
-              (reply) => (
-                <Comment
-                  user={user}
-                  key={reply.id}
-                  value={reply}
-                  handlePostReply={handlePostReply}
-                />
-              )
-              // console.log({ reply })
-            )}
+            value?.replies?.map((reply) => (
+              <Comment
+                user={user}
+                key={reply.id}
+                value={reply}
+                handlePostReply={handlePostReply}
+              />
+            ))}
         </div>
       </div>
     </div>
